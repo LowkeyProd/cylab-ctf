@@ -1,0 +1,18 @@
+{
+  "id": 37,
+  "name": "strings it",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/dede17d717e026b75f6b9e7fb2c1601b46093ced6f209b8f6b27ffd883a9ae2f/strings",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "strings"
+  ],
+  "hints": [
+    "[strings](https://linux.die.net/man/1/strings)"
+  ],
+  "description": "\nCan you find the flag in <a href='https://challenge-files.cylabacademy.net/library/dede17d717e026b75f6b9e7fb2c1601b46093ced6f209b8f6b27ffd883a9ae2f/strings' download>file</a> without running it?"
+}

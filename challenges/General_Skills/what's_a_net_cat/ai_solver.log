@@ -1,0 +1,12 @@
+### Kết quả giải thử thách CTF: what's a net cat?
+
+- **Official Flag:** `academy{nEtCat_Mast3ry_eb8Afcd3}`
+- **Flag file:** [flag.txt](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/what%27s_a_net_cat/flag.txt)
+- **Solve script:** [solve.py](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/what%27s_a_net_cat/solve.py)
+- **Báo cáo chi tiết & Writeup:** [WRITEUP.md](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/what%27s_a_net_cat/WRITEUP.md)
+
+#### Tóm tắt quá trình thực thi:
+1. Phân tích đề bài và cấu hình kết nối trong [connection.cfg](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/what%27s_a_net_cat/connection.cfg) trỏ tới `xebec.cylabacademy.net:43155`.
+2. Xây dựng mã nguồn giải tự động [solve.py](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/what%27s_a_net_cat/solve.py) đọc cấu hình động, mở kết nối raw TCP socket, đọc banner chào mừng và trích xuất flag token.
+3. Kiểm tra thực thi thành công, lưu cờ vào `flag.txt` và tự động tạo file [WRITEUP.md](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/what%27s_a_net_cat/WRITEUP.md).
+

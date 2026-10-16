@@ -1,0 +1,16 @@
+{
+  "id": 86,
+  "name": "2warm",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [],
+  "hints": [
+    "Submit your answer in our competition's flag format. For example, if your answer was '11111', you would submit 'academy{11111}' as the flag."
+  ],
+  "description": "Can you convert the number 42 (base 10) to binary (base 2)?\n"
+}

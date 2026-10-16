@@ -1,0 +1,26 @@
+### Flag chính thức đã xác minh
+
+```
+academy{xxsh_0ut_0f_//4t3r_47c47679}
+```
+
+Flag đã được lưu vào file [flag.txt](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Magikarp_Ground_Mission/flag.txt).
+
+---
+
+### Tóm tắt giải pháp
+
+1. **Khám phá mục tiêu**:
+   - Sử dụng SSH kết nối vào `chatelaine.cylabacademy.net:37440` với tài khoản `ctf-player:f6904eaa` (được cấu hình động trong [connection.cfg](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Magikarp_Ground_Mission/connection.cfg)).
+2. **Thu thập các mảnh flag**:
+   - Phần 1: `/home/ctf-player/drop-in/1of3.flag.txt` $\rightarrow$ `academy{xxsh_`
+   - Phần 2: `/2of3.flag.txt` $\rightarrow$ `0ut_0f_//4t3r_`
+   - Phần 3: `/home/ctf-player/3of3.flag.txt` $\rightarrow$ `47c47679}`
+3. **Tái hiện flag**: Ghép 3 phần lại ta được flag đầy đủ: `academy{xxsh_0ut_0f_//4t3r_47c47679}`.
+4. **Mã nguồn giải tự động**: Đã hoàn thiện và kiểm thử thành công trong [solve.py](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Magikarp_Ground_Mission/solve.py).
+
+---
+
+Báo cáo phân tích và tài liệu kỹ thuật chi tiết đã được tự động tạo tại:
+👉 [WRITEUP.md](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Magikarp_Ground_Mission/WRITEUP.md)
+

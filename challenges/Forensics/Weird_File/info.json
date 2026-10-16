@@ -1,0 +1,18 @@
+{
+  "id": 101,
+  "name": "Weird File",
+  "category": "Forensics",
+  "difficulty": 2,
+  "points": 20,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/b99ccd7c322df5b671439cb3a077a65446b967013fe4a3036610b53e0d311bca/weird.docm",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "weird.docm"
+  ],
+  "hints": [
+    "https://www.youtube.com/watch?v=Y7IJjnLGqTQ"
+  ],
+  "description": "What could go wrong if we let Word documents run programs? (aka \"in-the-clear\").\n<a href='https://challenge-files.cylabacademy.net/library/b99ccd7c322df5b671439cb3a077a65446b967013fe4a3036610b53e0d311bca/weird.docm' download>weird.docm</a>"
+}

@@ -1,0 +1,16 @@
+{
+  "id": 22,
+  "name": "Lets Warm Up",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 50,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [],
+  "hints": [
+    "Submit your answer in our flag format. For example, if your answer was 'hello', you would submit 'academy{hello}' as the flag."
+  ],
+  "description": "If I told you a word started with 0x70 in hexadecimal, what would it start with in ASCII?\n"
+}

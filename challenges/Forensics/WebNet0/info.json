@@ -1,0 +1,20 @@
+{
+  "id": 32,
+  "name": "WebNet0",
+  "category": "Forensics",
+  "difficulty": 3,
+  "points": 350,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/2d15538465c5948f0f0626d0cdd271f74363c00aa99d694730fe98331946ab88/webnet0-capture.pcap",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "webnet0-capture.pcap",
+    "picopico.key"
+  ],
+  "hints": [
+    "Try using a tool like Wireshark.",
+    "How can you decrypt the TLS stream?"
+  ],
+  "description": "\nWe found this <a href='https://challenge-files.cylabacademy.net/library/2d15538465c5948f0f0626d0cdd271f74363c00aa99d694730fe98331946ab88/webnet0-capture.pcap' download>packet capture</a> and <a href='https://challenge-files.cylabacademy.net/library/2d15538465c5948f0f0626d0cdd271f74363c00aa99d694730fe98331946ab88/picopico.key' download>key</a>. Recover the flag."
+}

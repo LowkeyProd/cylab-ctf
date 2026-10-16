@@ -1,0 +1,18 @@
+{
+  "id": 74,
+  "name": "What Lies Within",
+  "category": "Forensics",
+  "difficulty": 2,
+  "points": 150,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/5235bfccd8f3cc2d059ee828f774846542f28f7ec66cb4f0c6ceb536c38026d4/buildings.png",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "buildings.png"
+  ],
+  "hints": [
+    "There is data encoded somewhere... there might be an online decoder."
+  ],
+  "description": "\nThere's something in the <a href='https://challenge-files.cylabacademy.net/library/5235bfccd8f3cc2d059ee828f774846542f28f7ec66cb4f0c6ceb536c38026d4/buildings.png' download>building</a>. Can you retrieve the flag?"
+}

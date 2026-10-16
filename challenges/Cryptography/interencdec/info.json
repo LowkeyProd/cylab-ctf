@@ -1,0 +1,18 @@
+{
+  "id": 418,
+  "name": "interencdec",
+  "category": "Cryptography",
+  "difficulty": 1,
+  "points": 50,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "enc_flag"
+  ],
+  "hints": [
+    "Engaging in various decoding processes is of utmost importance"
+  ],
+  "description": "Can you get the real meaning from this file.\n\nDownload the file <a href='https://challenge-files.cylabacademy.net/library/0fbf6ae2bc00090132a51cd3a1fdf2be7871a6bb7b54bf8f2b06dfada963e014/enc_flag' download>here</a>.\n"
+}

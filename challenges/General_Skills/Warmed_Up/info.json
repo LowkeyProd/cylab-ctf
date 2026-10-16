@@ -1,0 +1,16 @@
+{
+  "id": 58,
+  "name": "Warmed Up",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 50,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [],
+  "hints": [
+    "Submit your answer in our flag format. For example, if your answer was '22', you would submit 'academy{22}' as the flag."
+  ],
+  "description": "What is 0x3D (base 16) in decimal (base 10)?\n"
+}

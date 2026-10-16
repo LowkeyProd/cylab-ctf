@@ -1,0 +1,14 @@
+Thử thách **Nice netcat...** đã được giải thành công.
+
+### Flag đã xác minh
+```
+academy{g00d_k1tty!_n1c3_k1tty!_6d1e6}
+```
+Flag đã được ghi lưu vào [flag.txt](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Nice_netcat.../flag.txt).
+
+### Tóm tắt giải pháp
+- **Phân tích giao thức:** Dịch vụ phản hồi một chuỗi số nguyên thập phân đại diện cho các mã ký tự ASCII tương ứng của flag (`97` $\rightarrow$ `'a'`, `99` $\rightarrow$ `'c'`, `97` $\rightarrow$ `'a'`, ...).
+- **Khai thác:** Script [solve.py](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Nice_netcat.../solve.py) tự động phân tích tham số mạng từ [connection.cfg](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Nice_netcat.../connection.cfg), kết nối socket, nhận luồng byte, chuyển đổi từng số nguyên thành ký tự ASCII bằng `chr()` và trích xuất flag.
+
+Báo cáo chi tiết theo chuẩn writeup đã được tạo tại: [WRITEUP.md](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Nice_netcat.../WRITEUP.md).
+

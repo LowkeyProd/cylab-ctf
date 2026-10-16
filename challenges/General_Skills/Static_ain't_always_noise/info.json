@@ -1,0 +1,17 @@
+{
+  "id": 163,
+  "name": "Static ain't always noise",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 20,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/static",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "static",
+    "ltdis.sh"
+  ],
+  "hints": [],
+  "description": "Can you look at the data in this binary? The bash script might help!\n<a href='https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/static' download>static</a>, <a href='https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/ltdis.sh' download>ltdis.sh</a>"
+}

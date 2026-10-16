@@ -1,0 +1,19 @@
+{
+  "id": 718,
+  "name": "Small Trouble",
+  "category": "Cryptography",
+  "difficulty": 2,
+  "points": 200,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/f38c357a8331785ca63ae8e6e36d20e6f8160839a03dc3bdb28e6dcaee33e15f/message.txt",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "message.txt",
+    "encryption.py"
+  ],
+  "hints": [
+    "This might be a job for Boneh-Durfee."
+  ],
+  "description": "Everything seems secure; strong numbers, familiar parameters but something small might ruin it all. Can you recover the message?\nDownload the <a href='https://challenge-files.cylabacademy.net/library/f38c357a8331785ca63ae8e6e36d20e6f8160839a03dc3bdb28e6dcaee33e15f/message.txt' download>message</a>. And source <a href='https://challenge-files.cylabacademy.net/library/f38c357a8331785ca63ae8e6e36d20e6f8160839a03dc3bdb28e6dcaee33e15f/encryption.py' download>code</a>"
+}

@@ -1,0 +1,19 @@
+{
+  "id": 10,
+  "name": "vault-door-8",
+  "category": "Reverse Engineering",
+  "difficulty": 3,
+  "points": 450,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/0b7c9ff3145fd1a47f09ac08c11072dd1d23d2684d24df1388d720ff47e738a2/VaultDoor8.java",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "VaultDoor8.java"
+  ],
+  "hints": [
+    "Clean up the source code so that you can read it and understand what is going on.",
+    "Draw a diagram to illustrate which bits are being switched in the scramble() method, then figure out a sequence of bit switches to undo it. You should be able to reuse the switchBits() method as is."
+  ],
+  "description": "Apparently Dr. Evil's minions knew that our agency was making copies of their source code, because they intentionally sabotaged this source code in order to make it harder for our agents to analyze and crack into! The result is a quite mess, but I trust that my best special agent will find a way to solve it.\nThe source code for this vault is here: <a href='https://challenge-files.cylabacademy.net/library/0b7c9ff3145fd1a47f09ac08c11072dd1d23d2684d24df1388d720ff47e738a2/VaultDoor8.java' download>VaultDoor8.java</a>"
+}

@@ -1,0 +1,18 @@
+{
+  "id": 85,
+  "name": "First Grep",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/3ff907ca5b2c4bf9b5c47914ad89787b1dcbf5e88d99b96c52eb652a6b5f3729/file",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "file"
+  ],
+  "hints": [
+    "grep [tutorial](https://ryanstutorials.net/linuxtutorial/grep.php)"
+  ],
+  "description": "Can you find the flag in the file? This would be really tedious to look through manually, something tells me there is a better way.\nThe flag is in this <a href='https://challenge-files.cylabacademy.net/library/3ff907ca5b2c4bf9b5c47914ad89787b1dcbf5e88d99b96c52eb652a6b5f3729/file' download>file</a>."
+}

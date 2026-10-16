@@ -1,0 +1,18 @@
+{
+  "id": 68,
+  "name": "The Numbers",
+  "category": "Cryptography",
+  "difficulty": 1,
+  "points": 50,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "the_numbers.png"
+  ],
+  "hints": [
+    "The flag is in the format PICOCTF{}"
+  ],
+  "description": "The numbers... what do they mean?\n<a href='https://challenge-files.cylabacademy.net/library/664bc3a85525cfd5a2af151d29f2744ba334880e28e60f9a513aba13633199d4/the_numbers.png' download>numbers</a>"
+}

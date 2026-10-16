@@ -1,0 +1,25 @@
+# Password Profiler
+
+- **Category:** General Skills
+- **Difficulty:** Easy
+- **Points:** 100
+- **Instance Required:** No
+- **Connection:** `https://challenge-files.cylabacademy.net/library/eee2a66921bd7ab65c6464f5293a9d15cc01c8631a0dc4c9668db8a2525639fc/userinfo.txt`
+
+## Description
+We intercepted a suspicious file from a system, but instead of the password itself, it only contains its SHA-1 hash. Using OSINT techniques, you are provided with personal details about the target. Your task is to leverage this information to generate a custom password list and recover the original password by matching its hash.
+Download the following files:
+
+<a href='https://challenge-files.cylabacademy.net/library/eee2a66921bd7ab65c6464f5293a9d15cc01c8631a0dc4c9668db8a2525639fc/userinfo.txt' download>userinfo</a>: Contains the personal details.
+
+<a href='https://challenge-files.cylabacademy.net/library/eee2a66921bd7ab65c6464f5293a9d15cc01c8631a0dc4c9668db8a2525639fc/hash.txt' download>hash</a>: Contains the SHA-1 hash of the password.
+
+<a href='https://challenge-files.cylabacademy.net/library/eee2a66921bd7ab65c6464f5293a9d15cc01c8631a0dc4c9668db8a2525639fc/check_password.py' download>check_password</a>: Script to test passwords against the hash.
+
+## Hints
+- [ CUPP](https://github.com/Mebus/cupp) is a Python tool for generating custom wordlists from personal data.
+
+## Files
+- [userinfo.txt](userinfo.txt)
+- [hash.txt](hash.txt)
+- [check_password.py](check_password.py)

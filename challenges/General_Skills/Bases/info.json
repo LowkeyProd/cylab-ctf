@@ -1,0 +1,16 @@
+{
+  "id": 67,
+  "name": "Bases",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [],
+  "hints": [
+    "Submit your answer in our flag format. For example, if your answer was 'hello', you would submit 'academy{hello}' as the flag."
+  ],
+  "description": "What does this `bDNhcm5fdGgzX3IwcDM1` mean? I think it has something to do with bases.\n"
+}

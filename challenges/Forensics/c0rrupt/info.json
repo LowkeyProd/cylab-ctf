@@ -1,0 +1,18 @@
+{
+  "id": 53,
+  "name": "c0rrupt",
+  "category": "Forensics",
+  "difficulty": 2,
+  "points": 250,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/8388ecc430588d15064755583476bec46e23d42a6d8de6e8995c19e40f2e4c58/c0rrupt-mystery",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "c0rrupt-mystery"
+  ],
+  "hints": [
+    "Try fixing the file header"
+  ],
+  "description": "\nWe found this <a href='https://challenge-files.cylabacademy.net/library/8388ecc430588d15064755583476bec46e23d42a6d8de6e8995c19e40f2e4c58/c0rrupt-mystery' download>file</a>. Recover the flag."
+}

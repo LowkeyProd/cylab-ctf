@@ -1,0 +1,16 @@
+{
+  "id": 17,
+  "name": "droids4",
+  "category": "Reverse Engineering",
+  "difficulty": 3,
+  "points": 500,
+  "on_demand": false,
+  "connection_cmd": "https://challenge-files.cylabacademy.net/library/6a4e0bef83d40ea9121009c5ae6a5230e06eb011eef934798704fa66bcfc84f0/four.apk",
+  "target_host": "challenge-files.cylabacademy.net",
+  "target_port": 443,
+  "downloaded_files": [
+    "four.apk"
+  ],
+  "hints": [],
+  "description": "\nReverse the pass, patch the file, get the flag. Check out this <a href='https://challenge-files.cylabacademy.net/library/6a4e0bef83d40ea9121009c5ae6a5230e06eb011eef934798704fa66bcfc84f0/four.apk' download>file</a>."
+}
