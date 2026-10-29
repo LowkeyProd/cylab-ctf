@@ -5683,17 +5683,177 @@ def submit_all_static_flags(manager: ChallengeManager, static_records: List[Dict
     ))
     Prompt.ask(tr("\n[dim]Nhấn Enter để quay lại...[/dim]", "\n[dim]Press Enter to return...[/dim]"), default="")
 
-def comaogaotien_flow(manager: ChallengeManager):
+def comaogaotien_flow(manager: ChallengeManager, writeups_only: bool = False):
     """Compatibility redirection: Comaogaotien has been merged into Auto Solve."""
-    return auto_solve_selector_flow(manager)
+    return auto_solve_selector_flow(manager, writeups_only=writeups_only)
 
-def auto_solve_selector_flow(manager: ChallengeManager):
+def get_unsolved_writeup_queue(manager: ChallengeManager) -> List[Dict[str, Any]]:
+    """
+    Scans local workspaces for challenges that have writeups or solve scripts
+    and are NOT yet solved on the user's account.
+    Returns them as a prioritized queue ready for batch / dual-worker execution.
+    """
+    records = scan_local_solved_challenges(manager)
+    unsolved_records = [
+        r for r in records
+        if not r.get("solved_by_user") and (r.get("has_writeup") or r.get("has_solve_py"))
+    ]
+
+    chals_cache = manager.cache.get("challenges", {})
+    if isinstance(chals_cache, dict):
+        c_map = {int(k) if str(k).isdigit() else k: v for k, v in chals_cache.items()}
+    else:
+        c_map = {c["id"]: c for c in chals_cache if isinstance(c, dict) and "id" in c}
+    solver_queue = []
+
+    for r in unsolved_records:
+        cid = r.get("challenge_id")
+        c = c_map.get(cid)
+        if c:
+            c_copy = dict(c)
+        else:
+            c_copy = {
+                "id": cid,
+                "name": r.get("name"),
+                "category": r.get("category"),
+                "difficulty": r.get("difficulty", 1),
+                "instance": r.get("on_demand", False),
+                "solved": False,
+            }
+        c_copy["has_writeup"] = r.get("has_writeup", False)
+        c_copy["has_solve_py"] = r.get("has_solve_py", False)
+        c_copy["priority_rank"] = r.get("priority_rank", 0)
+        c_copy["flag"] = r.get("flag", "")
+        c_copy["is_dynamic_flag"] = r.get("is_dynamic_flag", False)
+        solver_queue.append(c_copy)
+
+    solver_queue.sort(key=lambda c: (
+        c.get("priority_rank", 2),
+        c.get("category", {}).get("name", "") if isinstance(c.get("category"), dict) else str(c.get("category", "")),
+        c.get("difficulty", 1),
+        c.get("id", 0)
+    ))
+    return solver_queue
+
+def _render_and_run_queue_step(manager: ChallengeManager, solver_queue: List[Dict[str, Any]]):
+    """
+    Step 4: Paginated Queue View & Execution Confirmation (1 screen per page).
+    Allows reviewing the queued challenges, page navigation, or starting
+    Dual-Worker / Single-Worker batch solving.
+    """
+    if not solver_queue:
+        console.print(tr("[yellow]Hàng đợi giải tự động đang trống![/yellow]", "[yellow]Solver queue is empty![/yellow]"))
+        Prompt.ask(tr("\n[dim]Nhấn Enter để quay lại menu chính...[/dim]", "\n[dim]Press Enter to return to main menu...[/dim]"), default="")
+        return
+
+    # Step 4: Paginated Queue View & Execution Confirmation (1 screen per page)
+    total_q = len(solver_queue)
+    q_page = 1
+
+    while True:
+        clear_screen()
+        q_page_size = ChallengeManager.get_dynamic_page_size(reserved_lines=10)
+        q_total_pages = max(1, (total_q + q_page_size - 1) // q_page_size)
+        q_page = min(q_page, q_total_pages)
+
+        start_idx = (q_page - 1) * q_page_size
+        end_idx = min(start_idx + q_page_size, total_q)
+        page_items = solver_queue[start_idx:end_idx]
+
+        q_title = tr(
+            f"Hàng đợi bài thi tự động [dim]— Trang {q_page}/{q_total_pages} (Tổng {total_q} bài)[/dim]",
+            f"Automated Solver Queue [dim]— Page {q_page}/{q_total_pages} (Total {total_q} challenges)[/dim]"
+        )
+        ChallengeManager._render_single_page_table(page_items, title=q_title, start_idx=start_idx + 1)
+
+        console.print(tr(
+            f"\n[bold cyan]Trang {q_page}/{q_total_pages}[/bold cyan]  |  "
+            f"[bold yellow]a[/bold yellow]: Trước  |  "
+            f"[bold green]d[/bold green]: Sau  |  "
+            f"[bold green]all[/bold green]: Giải TOÀN BỘ ({total_q} bài)  |  "
+            f"[bold cyan]<1..{total_q} / ID>[/bold cyan]: Giải 1 bài  |  "
+            f"[bold red]0[/bold red]: Quay lại",
+            f"\n[bold cyan]Page {q_page}/{q_total_pages}[/bold cyan]  |  "
+            f"[bold yellow]a[/bold yellow]: Prev  |  "
+            f"[bold green]d[/bold green]: Next  |  "
+            f"[bold green]all[/bold green]: Solve ALL ({total_q} chals)  |  "
+            f"[bold cyan]<1..{total_q} / ID>[/bold cyan]: Solve 1 chal  |  "
+            f"[bold red]0[/bold red]: Back"
+        ))
+        ans = MenuPrompt.ask(default="all").strip()
+
+        if ans in ["0", "q", "exit", "quit"]:
+            return
+        elif ans.lower() in ["d", "next", "n"]:
+            if q_page < q_total_pages:
+                q_page += 1
+            else:
+                q_page = 1
+            continue
+        elif ans.lower() in ["a", "prev", "previous", "p", "b", "back"]:
+            if q_page > 1:
+                q_page -= 1
+            else:
+                q_page = q_total_pages
+            continue
+        elif ans.lower().startswith("p") and ans[1:].isdigit():
+            target_p = int(ans[1:])
+            if 1 <= target_p <= q_total_pages:
+                q_page = target_p
+            continue
+        elif ans.lower() in ["all", "a", "y"]:
+            confirm_msg = tr(f"Bắt đầu tự động giải toàn bộ {total_q} bài theo hàng đợi?", f"Start automated solving for all {total_q} queued challenges?")
+            if Confirm.ask(confirm_msg):
+                console.print(tr("\n[bold cyan]Chọn chế độ xử lý Batch:[/bold cyan]", "\n[bold cyan]Select Batch Execution Mode:[/bold cyan]"))
+                console.print(tr(
+                    "  [bold green]1[/bold green]. [bold green]Dual-Worker (1 Instance + 1 Static)[/bold green] [bold yellow](Khuyên dùng - Ổn định nhất)[/bold yellow]\n"
+                    "  [bold red]2[/bold red]. [bold red]Dual-Worker (2 Instances đồng thời)[/bold red] [bold yellow](Thử nghiệm - Lưu ý CyLab giới hạn 1 container/tài khoản)[/bold yellow]\n"
+                    "  [white]3[/white]. [white]Single-Worker (Tuần tự từng bài một)[/white]",
+                    "  [bold green]1[/bold green]. [bold green]Dual-Worker (1 Instance + 1 Static)[/bold green] [bold yellow](Recommended - Most stable)[/bold yellow]\n"
+                    "  [bold red]2[/bold red]. [bold red]Dual-Worker (2 Instances concurrently)[/bold red] [bold yellow](Experimental - CyLab limits 1 container/account)[/bold yellow]\n"
+                    "  [white]3[/white]. [white]Single-Worker (Sequential execution)[/white]"
+                ))
+                mode = MenuPrompt.ask(choices=["1", "2", "3"], default="1")
+                if mode == "1":
+                    run_dual_worker_batch(manager, solver_queue, num_workers=2, allow_concurrent_instances=False)
+                    return
+                elif mode == "2":
+                    run_dual_worker_batch(manager, solver_queue, num_workers=2, allow_concurrent_instances=True)
+                    return
+                else:
+                    run_dual_worker_batch(manager, solver_queue, num_workers=1)
+                    return
+        else:
+            # User chose a specific challenge from queue
+            target_chal = None
+            try:
+                val = int(ans)
+                if 1 <= val <= total_q:
+                    target_chal = solver_queue[val - 1]
+                else:
+                    for c in solver_queue:
+                        if c["id"] == val:
+                            target_chal = c
+                            break
+            except ValueError:
+                pass
+
+            if not target_chal:
+                console.print(tr("[red]Lựa chọn không hợp lệ.[/red]", "[red]Invalid selection.[/red]"))
+                time.sleep(1)
+                continue
+
+            clear_screen()
+            solve_challenge_flow(manager.client, manager, target_chal["id"])
+            Prompt.ask(tr("\n[dim]Nhấn Enter để quay lại menu chính...[/dim]", "\n[dim]Press Enter to return to main menu...[/dim]"), default="")
+            return
+
+def auto_solve_selector_flow(manager: ChallengeManager, writeups_only: bool = False):
     """
     Comprehensive Auto Solver Flow:
-    Automatically prioritizes challenges with local Writeups or solve.py scripts,
-    crawls challenge statements and files, and executes the optimal solving pipeline.
+    Automatically scans challenges with writeups, offers a dedicated fast track to solve
+    ONLY those writeup-backed challenges, or allows multi-category & difficulty filtering.
     """
-
     clear_screen()
     console.print(tr(
         "\n[bold cyan]╔══════════════════════════════════════════════════════════════╗[/bold cyan]\n"
@@ -5704,6 +5864,69 @@ def auto_solve_selector_flow(manager: ChallengeManager):
         "[bold cyan]╚══════════════════════════════════════════════════════════════╝[/bold cyan]"
     ))
 
+    # Tự động quét các bài có sẵn Writeup / solve.py trong máy nhưng chưa làm trên CyLab
+    unsolved_writeup_queue = get_unsolved_writeup_queue(manager)
+    unsolved_w_count = len(unsolved_writeup_queue)
+
+    if writeups_only:
+        selected_mode = "1"
+    elif unsolved_w_count > 0:
+        w_count_writeup = sum(1 for c in unsolved_writeup_queue if c.get("has_writeup"))
+        w_count_script = sum(1 for c in unsolved_writeup_queue if (c.get("has_solve_py") and not c.get("has_writeup")))
+
+        console.print(tr(
+            f"\n[bold yellow]★ TÌM THẤY [bold green]{unsolved_w_count}[/bold green] BÀI CHƯA LÀM ĐÃ CÓ SẴN WRITEUP / SOLVE SCRIPT TRÊN MÁY![/bold yellow]\n"
+            f"[dim]  (Gồm [green]{w_count_writeup}[/green] bài có Writeup chi tiết và [cyan]{w_count_script}[/cyan] bài có script solve.py)[/dim]\n\n"
+            f"[bold]Chọn phương thức giải tự động:[/bold]\n"
+            f"  [bold green]1[/bold green]. [bold green]CHỈ GIẢI các bài ĐÃ CÓ WRITEUP / SCRIPT[/bold green] [bold yellow](Khuyên dùng - {unsolved_w_count} bài - Tỉ lệ thành công cao nhất)[/bold yellow]\n"
+            f"  [bold cyan]2[/bold cyan]. Tùy chỉnh theo Bộ lọc Danh mục, Độ khó & Số lượng bài ([cyan]Wizard thông thường[/cyan])\n"
+            f"  [bold red]0[/bold red]. Quay lại menu chính",
+            f"\n[bold yellow]★ FOUND [bold green]{unsolved_w_count}[/bold green] UNSOLVED CHALLENGES WITH LOCAL WRITEUP / SOLVE SCRIPTS![/bold yellow]\n"
+            f"[dim]  (Includes [green]{w_count_writeup}[/green] detailed writeups and [cyan]{w_count_script}[/cyan] solve.py scripts)[/dim]\n\n"
+            f"[bold]Select auto-solve mode:[/bold]\n"
+            f"  [bold green]1[/bold green]. [bold green]Solve ONLY challenges WITH WRITEUP / SCRIPT[/bold green] [bold yellow](Recommended - {unsolved_w_count} chals - Highest success rate)[/bold yellow]\n"
+            f"  [bold cyan]2[/bold cyan]. Custom Wizard by Category, Difficulty & Count ([cyan]Standard Wizard[/cyan])\n"
+            f"  [bold red]0[/bold red]. Return to main menu"
+        ))
+        selected_mode = MenuPrompt.ask(choices=["0", "1", "2"], default="1")
+        if selected_mode == "0":
+            return
+    else:
+        selected_mode = "2"
+
+    if selected_mode == "1":
+        # Mode 1: Fast Track chỉ giải bài có Writeup / Script
+        clear_screen()
+        cat_counts = {}
+        for c in unsolved_writeup_queue:
+            cat_obj = c.get("category")
+            cname = cat_obj.get("name") if isinstance(cat_obj, dict) else str(cat_obj or "Other")
+            cat_counts[cname] = cat_counts.get(cname, 0) + 1
+
+        w_table = Table(
+            title=tr(f"DANH SÁCH BÀI CÓ WRITEUP CHƯA GIẢI ({unsolved_w_count} BÀI)", f"UNSOLVED WRITEUP-BACKED CHALLENGES ({unsolved_w_count} CHALS)"),
+            expand=True
+        )
+        w_table.add_column(tr("Danh mục", "Category"), style="bold cyan")
+        w_table.add_column(tr("Số bài sẵn sàng giải", "Ready to Solve"), justify="right", style="bold green")
+
+        for cname, cnt in sorted(cat_counts.items(), key=lambda x: -x[1]):
+            w_table.add_row(cname, str(cnt))
+
+        console.print("\n")
+        console.print(w_table)
+        console.print(tr(
+            f"\n[bold green][OK] Đã nạp thành công {unsolved_w_count} bài có writeup vào hàng đợi.[/bold green]",
+            f"\n[bold green][OK] Loaded {unsolved_w_count} writeup-backed challenges into queue.[/bold green]"
+        ))
+        Prompt.ask(tr(
+            "\n[bold cyan]Nhấn Enter để xem hàng đợi bài thi & xác nhận giải...[/bold cyan]",
+            "\n[bold cyan]Press Enter to review challenge queue & confirm solving...[/bold cyan]"
+        ), default="")
+
+        return _render_and_run_queue_step(manager, unsolved_writeup_queue)
+
+    # Mode 2: Wizard cấu hình theo danh mục, độ khó & số lượng bài
     cats = manager.cache.get("categories", [])
     if not cats:
         cats = manager.client.get_categories()
@@ -5948,108 +6171,7 @@ def auto_solve_selector_flow(manager: ChallengeManager):
         "\n[bold cyan]Nhấn Enter để xem hàng đợi bài thi & xác nhận giải...[/bold cyan]",
         "\n[bold cyan]Press Enter to review challenge queue & confirm solving...[/bold cyan]"
     ), default="")
-
-    # Step 4: Paginated Queue View & Execution Confirmation (1 screen per page)
-    total_q = len(solver_queue)
-    q_page = 1
-
-    while True:
-        clear_screen()
-        q_page_size = ChallengeManager.get_dynamic_page_size(reserved_lines=10)
-        q_total_pages = max(1, (total_q + q_page_size - 1) // q_page_size)
-        q_page = min(q_page, q_total_pages)
-
-        start_idx = (q_page - 1) * q_page_size
-        end_idx = min(start_idx + q_page_size, total_q)
-        page_items = solver_queue[start_idx:end_idx]
-
-        q_title = tr(
-            f"Hàng đợi bài thi tự động [dim]— Trang {q_page}/{q_total_pages} (Tổng {total_q} bài)[/dim]",
-            f"Automated Solver Queue [dim]— Page {q_page}/{q_total_pages} (Total {total_q} challenges)[/dim]"
-        )
-        ChallengeManager._render_single_page_table(page_items, title=q_title, start_idx=start_idx + 1)
-
-        console.print(tr(
-            f"\n[bold cyan]Trang {q_page}/{q_total_pages}[/bold cyan]  |  "
-            f"[bold yellow]a[/bold yellow]: Trước  |  "
-            f"[bold green]d[/bold green]: Sau  |  "
-            f"[bold green]all[/bold green]: Giải TOÀN BỘ ({total_q} bài)  |  "
-            f"[bold cyan]<1..{total_q} / ID>[/bold cyan]: Giải 1 bài  |  "
-            f"[bold red]0[/bold red]: Quay lại",
-            f"\n[bold cyan]Page {q_page}/{q_total_pages}[/bold cyan]  |  "
-            f"[bold yellow]a[/bold yellow]: Prev  |  "
-            f"[bold green]d[/bold green]: Next  |  "
-            f"[bold green]all[/bold green]: Solve ALL ({total_q} chals)  |  "
-            f"[bold cyan]<1..{total_q} / ID>[/bold cyan]: Solve 1 chal  |  "
-            f"[bold red]0[/bold red]: Back"
-        ))
-        ans = MenuPrompt.ask(default="all").strip()
-
-        if ans in ["0", "q", "exit", "quit"]:
-            return
-        elif ans.lower() in ["d", "next", "n"]:
-            if q_page < q_total_pages:
-                q_page += 1
-            else:
-                q_page = 1
-            continue
-        elif ans.lower() in ["a", "prev", "previous", "p", "b", "back"]:
-            if q_page > 1:
-                q_page -= 1
-            else:
-                q_page = q_total_pages
-            continue
-        elif ans.lower().startswith("p") and ans[1:].isdigit():
-            target_p = int(ans[1:])
-            if 1 <= target_p <= q_total_pages:
-                q_page = target_p
-            continue
-        elif ans.lower() in ["all", "a", "y"]:
-            confirm_msg = tr(f"Bắt đầu tự động giải toàn bộ {total_q} bài theo hàng đợi?", f"Start automated solving for all {total_q} queued challenges?")
-            if Confirm.ask(confirm_msg):
-                console.print(tr("\n[bold cyan]Chọn chế độ xử lý Batch:[/bold cyan]", "\n[bold cyan]Select Batch Execution Mode:[/bold cyan]"))
-                console.print(tr(
-                    "  [bold green]1[/bold green]. [bold green]Dual-Worker (1 Instance + 1 Static)[/bold green] [bold yellow](Khuyên dùng - Ổn định nhất)[/bold yellow]\n"
-                    "  [bold red]2[/bold red]. [bold red]Dual-Worker (2 Instances đồng thời)[/bold red] [bold yellow](Thử nghiệm - Lưu ý CyLab giới hạn 1 container/tài khoản)[/bold yellow]\n"
-                    "  [white]3[/white]. [white]Single-Worker (Tuần tự từng bài một)[/white]",
-                    "  [bold green]1[/bold green]. [bold green]Dual-Worker (1 Instance + 1 Static)[/bold green] [bold yellow](Recommended - Most stable)[/bold yellow]\n"
-                    "  [bold red]2[/bold red]. [bold red]Dual-Worker (2 Instances concurrently)[/bold red] [bold yellow](Experimental - CyLab limits 1 container/account)[/bold yellow]\n"
-                    "  [white]3[/white]. [white]Single-Worker (Sequential execution)[/white]"
-                ))
-                mode = MenuPrompt.ask(choices=["1", "2", "3"], default="1")
-                if mode == "1":
-                    run_dual_worker_batch(manager, solver_queue, num_workers=2, allow_concurrent_instances=False)
-                    return
-                elif mode == "2":
-                    run_dual_worker_batch(manager, solver_queue, num_workers=2, allow_concurrent_instances=True)
-                    return
-                else:
-                    run_dual_worker_batch(manager, solver_queue, num_workers=1)
-                    return
-        else:
-            # User chose a specific challenge from queue
-            target_chal = None
-            try:
-                val = int(ans)
-                if 1 <= val <= total_q:
-                    target_chal = solver_queue[val - 1]
-                else:
-                    for c in solver_queue:
-                        if c["id"] == val:
-                            target_chal = c
-                            break
-            except ValueError:
-                pass
-
-            if not target_chal:
-                console.print(tr("[red]Lựa chọn không hợp lệ.[/red]", "[red]Invalid selection.[/red]"))
-                time.sleep(1)
-                continue
-
-            clear_screen()
-            solve_challenge_flow(manager.client, manager, target_chal["id"])
-            Prompt.ask(tr("\n[dim]Nhấn Enter để quay lại menu chính...[/dim]", "\n[dim]Press Enter to return to main menu...[/dim]"), default="")
-            return
+    return _render_and_run_queue_step(manager, solver_queue)
 
 # ==============================================================================
 # 7. Interactive Main Menu
@@ -6296,6 +6418,7 @@ def main():
     parser.add_argument("--quota", action="store_true", help="Show Antigravity quota and account status")
     parser.add_argument("--auto-solve", action="store_true", help="Launch the Auto-Solve selector flow directly")
     parser.add_argument("--comaogaotien", action="store_true", help="Launch Comaogaotien flow directly")
+    parser.add_argument("--writeups-only", "--writeup-only", action="store_true", help="Auto-solve only challenges that already have a local writeup or solve script")
     parser.add_argument("--scan-writeups", action="store_true", help="Scan and classify all writeups as Static vs Dynamic flags")
     parser.add_argument("--cleanup", action="store_true", help="Clean up all solved challenge folders, keeping only solve.py and WRITEUP.md")
     parser.add_argument("--solve", type=int, help="Automatically solve a specific challenge by ID using Heuristics + Antigravity AI")
@@ -6346,6 +6469,10 @@ def main():
             difficulty=args.difficulty,
             search=args.search
         )
+        if args.writeups_only:
+            writeup_records = scan_local_solved_challenges(manager)
+            w_cids = {r["challenge_id"] for r in writeup_records if r.get("has_writeup") or r.get("has_solve_py")}
+            filtered = [c for c in filtered if c["id"] in w_cids]
         if args.limit:
             filtered = filtered[:args.limit]
         if not filtered:
@@ -6380,11 +6507,11 @@ def main():
         return
 
     if args.comaogaotien:
-        comaogaotien_flow(manager)
+        comaogaotien_flow(manager, writeups_only=args.writeups_only)
         return
 
     if args.auto_solve:
-        auto_solve_selector_flow(manager)
+        auto_solve_selector_flow(manager, writeups_only=args.writeups_only)
         return
 
     if args.list or args.search:
