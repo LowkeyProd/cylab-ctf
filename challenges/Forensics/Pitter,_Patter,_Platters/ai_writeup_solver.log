@@ -1,5 +1,0 @@
-The disk image [suspicious.dd.sda1](file:///C:/Users/lowkeyprod/cylab-ctf/challenges/Forensics/Pitter,_Patter,_Platters/suspicious.dd.sda1) was analyzed for hidden data residing in the file slack space of the Ext3 filesystem.
-
-### Analysis & Solution Steps
-1. **Slack Space Detection**:
-   - Located the logical EOF bounderror: interrupted

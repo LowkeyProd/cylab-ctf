@@ -51,7 +51,3 @@ python cylab_tool.py
 - `--lang {vi,en}`: Select terminal interface language (Vietnamese or English).
 - `--category <name>`: Filter challenges by category.
 - `--writeups-only`: Filter for challenges with local writeups.
-
-## Disclaimer
-
-This project is intended strictly for educational and personal CTF practice on CyLab Academy. Ensure you have appropriate authorization before using automated tools against any platform.

@@ -24,3 +24,10 @@ Thumbs.db
 *.img
 *.iso
 *.vmdk
+
+# Crawled challenges and local cache
+challenges/
+cylab_cache.json
+Cryptography/
+Droid0 - hard/
+Investigative Reversing 2 - hard/

@@ -1,8 +1,0 @@
-[2026-10-29 18:48:53] [INFO] [#412 Custom encryption] [SETUP] Setting up challenge #412 (Custom encryption) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Custom_encryption
-[2026-10-29 18:48:53] [INFO] [#412 Custom encryption] [DOWNLOAD] Downloaded enc_flag (287 bytes)
-[2026-10-29 18:48:54] [INFO] [#412 Custom encryption] [DOWNLOAD] Downloaded custom_encryption.py (1411 bytes)
-[2026-10-29 18:48:54] [INFO] [#412 Custom encryption] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Custom_encryption
-[2026-10-29 18:48:54] [INFO] [#412 Custom encryption] [FLOW_START] Starting improved end-to-end solve flow for challenge #412 (Custom encryption)
-[2026-10-29 18:48:55] [INFO] [#412 Custom encryption] [STAGE_WRITEUP_START] Prioritizing writeup solving for #412
-[2026-10-29 18:48:55] [SUCCESS] [#412 Custom encryption] [FLAG_SUBMISSION_SUCCESS] Accepted flag variant: academy{custom_d2cr0pt6d_b1f6d02d}
-[2026-10-29 18:48:55] [SUCCESS] [#412 Custom encryption] [STAGE_WRITEUP_SUCCESS] Solved via writeup static flag: academy{custom_d2cr0pt6d_b1f6d02d}

@@ -1,8 +1,0 @@
-[2026-10-29 18:48:51] [INFO] [#407 C3] [SETUP] Setting up challenge #407 (C3) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\C3
-[2026-10-29 18:48:51] [INFO] [#407 C3] [DOWNLOAD] Downloaded ciphertext (237 bytes)
-[2026-10-29 18:48:51] [INFO] [#407 C3] [DOWNLOAD] Downloaded convert.py (335 bytes)
-[2026-10-29 18:48:51] [INFO] [#407 C3] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\C3
-[2026-10-29 18:48:51] [INFO] [#407 C3] [FLOW_START] Starting improved end-to-end solve flow for challenge #407 (C3)
-[2026-10-29 18:48:53] [INFO] [#407 C3] [STAGE_WRITEUP_START] Prioritizing writeup solving for #407
-[2026-10-29 18:48:53] [SUCCESS] [#407 C3] [FLAG_SUBMISSION_SUCCESS] Accepted flag variant: academy{adlibs}
-[2026-10-29 18:48:53] [SUCCESS] [#407 C3] [STAGE_WRITEUP_SUCCESS] Solved via writeup static flag: academy{adlibs}
