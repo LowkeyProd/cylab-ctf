@@ -20,7 +20,7 @@ What does this `bDNhcm5fdGgzX3IwcDM1` mean? I think it has something to do with 
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

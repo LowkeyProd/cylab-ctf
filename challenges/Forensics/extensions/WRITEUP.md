@@ -4,7 +4,7 @@
 - **Challenge:** extensions (ID: 52)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/a5d365fedad883763fb28c78e25a1765220bef6501848c84f2a7a7adf74d83cd/flag.txt`
+- **Server / Instance:** `N/A`
 - **Attached Files:** flag.txt
 - **Official Flag:** `academy{now_you_know_about_extensions}`
 
@@ -21,7 +21,7 @@ Get the flag from <a href='https://challenge-files.cylabacademy.net/library/a5d3
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

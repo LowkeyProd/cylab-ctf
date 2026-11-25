@@ -4,7 +4,7 @@
 - **Challenge:** like1000 (ID: 81)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/0fcc092f4e3d0027bc89f6de85e2b750462dca0a96c5643e38e5825e2da1c3d2/1000.tar`
+- **Server / Instance:** `N/A`
 - **Attached Files:** 1000.tar
 - **Official Flag:** `academy{l0t5_0f_TAR5}`
 
@@ -20,7 +20,7 @@ This <a href='https://challenge-files.cylabacademy.net/library/0fcc092f4e3d0027b
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

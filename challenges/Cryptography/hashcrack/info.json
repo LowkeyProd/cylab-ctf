@@ -1,0 +1,18 @@
+{
+  "id": 475,
+  "name": "hashcrack",
+  "category": "Cryptography",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": true,
+  "connection_cmd": "nc chatelaine.cylabacademy.net 42529",
+  "target_host": "chatelaine.cylabacademy.net",
+  "target_port": 42529,
+  "downloaded_files": [],
+  "hints": [
+    "Understanding hashes is very crucial. [Read more here](https://primer.cylabacademy.org/#_hashing).",
+    "Can you identify the hash algorithm? Look carefully at the length and structure of each hash identified.",
+    "Tried using any hash cracking tools?"
+  ],
+  "description": "A company stored a secret message on a server which got breached due to the admin using weakly hashed passwords. Can you gain access to the secret stored within the server?\nAccess the server using `nc chatelaine.cylabacademy.net 42529`"
+}

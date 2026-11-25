@@ -1,8 +1,0 @@
-[2026-10-17 00:12:53] [INFO] [#170 Wave a flag] [SETUP] Setting up challenge #170 (Wave a flag) in /Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Wave_a_flag
-[2026-10-17 00:12:53] [INFO] [#170 Wave a flag] [CONNECTION] Resolved connection target: https://challenge-files.cylabacademy.net/library/7370c7c01b6da3581f45bd49c1e76752891ec49a2da06ba55ae6db18e5d036a4/warm (host=challenge-files.cylabacademy.net, port=443)
-[2026-10-17 00:12:53] [INFO] [#170 Wave a flag] [DOWNLOAD] Downloaded warm (17368 bytes)
-[2026-10-17 00:12:53] [INFO] [#170 Wave a flag] [FLOW_START] Starting end-to-end solve flow for challenge #170 (Wave a flag)
-[2026-10-17 00:12:53] [INFO] [#170 Wave a flag] [HEURISTICS_START] Running automated fast solver heuristics for #170 (Wave a flag)...
-[2026-10-17 00:12:53] [SUCCESS] [#170 Wave a flag] [STAGE_1_SUCCESS] Solved in Stage 1 (Fast Heuristics): academy{b1scu1ts_4nd_gr4vy_57d8c79}
-[2026-10-17 00:12:53] [INFO] [#170 Wave a flag] [SUBMISSION] Submitting flag 'academy{b1scu1ts_4nd_gr4vy_57d8c79}' to platform...
-[2026-10-17 00:12:54] [SUCCESS] [#170 Wave a flag] [SUBMISSION_SUCCESS] Platform confirmed flag correct: academy{b1scu1ts_4nd_gr4vy_57d8c79}

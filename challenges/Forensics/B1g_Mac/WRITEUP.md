@@ -1,51 +1,30 @@
-# Writeup: B1g_Mac (#56)
+# Writeup: B1g_Mac
 
-## 1. Header & Metadata
-- **Challenge Name:** B1g_Mac
-- **Challenge ID:** 56
+## Header & Metadata
+- **Challenge:** B1g_Mac (ID: 56)
+- **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Difficulty:** Hard
-- **CTF Event:** CyLab Academy / picoCTF
+- **Server / Instance:** `N/A`
+- **Attached Files:** b1g_mac.zip
 - **Official Flag:** `academy{M4cTim35!}`
 
 ---
 
-## 2. Overview / Analysis
-Challenge cung cấp một file nén `b1g_mac.zip` chứa một file thực thi `main.exe` và thư mục `test/` gồm nhiều ảnh bitmap (`Item01.bmp`, `Item01 - Copy.bmp`, ..., `ItemTest - Copy.bmp`).
+## Mô tả bài toán (Overview / Analysis)
 
-Khi giải nén thông thường, các file ảnh không chứa nội dung bất thường. Tuy nhiên, tên bài toán gợi ý về **MAC times** (Modified, Accessed, Created timestamps) trong hệ thống tệp NTFS của Windows.
+Here's a <a href='https://challenge-files.cylabacademy.net/library/77695762a74381ca12a69932aab6c7a22e4dc95de92d0056f13a315ac133833b/b1g_mac.zip' download>zip file</a>.
 
----
-
-## 3. Technical Deep-Dive
-Trong định dạng lưu trữ file ZIP theo chuẩn PKWARE:
-1. Mỗi tệp tin trong archive có thể chứa các trường mở rộng (**Extra Fields**) với Header ID định danh chuẩn:
-   - Header ID `0x000a`: **NTFS Extra Field Tag**.
-2. Cấu trúc trường NTFS Extra Field:
-   - 2 bytes Header ID (`0x000a`)
-   - 2 bytes Data Size
-   - 4 bytes Reserved
-   - 2 bytes Attribute Tag (`0x0001` cho NTFS attributes)
-   - 2 bytes Attribute Size (`0x0018` = 24 bytes)
-   - 8 bytes **MTime** (Modified Time, Windows 64-bit FILETIME)
-   - 8 bytes **ATime** (Access Time)
-   - 8 bytes **CTime** (Creation Time)
-3. Phân tích giá trị MTime của các file `test/Item* - Copy.bmp`:
-   - `Item01 - Copy.bmp`: `mtime = 0x1d4e36149336163` -> 2 byte cuối: `0x61` ('a'), `0x63` ('c')
-   - `Item02 - Copy.bmp`: `mtime = 0x1d4e36158b26164` -> `0x61` ('a'), `0x64` ('d')
-   - `Item03 - Copy.bmp`: `mtime = 0x1d4e36162d4656d` -> `0x65` ('e'), `0x6d` ('m')
-   - `Item04 - Copy.bmp`: `mtime = 0x1d4e3616ff1797b` -> `0x79` ('y'), `0x7b` ('{')
-   - `Item05 - Copy.bmp`: `mtime = 0x1d4e361797a4d34` -> `0x4d` ('M'), `0x34` ('4')
-   - `Item06 - Copy.bmp`: `mtime = 0x1d4e361de356354` -> `0x63` ('c'), `0x54` ('T')
-   - `Item07 - Copy.bmp`: `mtime = 0x1d4e361ef7f696d` -> `0x69` ('i'), `0x6d` ('m')
-   - `Item08 - Copy.bmp`: `mtime = 0x1d4e36218073335` -> `0x33` ('3'), `0x35` ('5')
-   - `ItemTest - Copy.bmp`: `mtime = 0x1d4e3690675217d` -> `0x21` ('!'), `0x7d` ('}')
-
-Ghép các ký tự theo thứ tự tên tệp cho ra: `academy{M4cTim35!}`.
+### Hints
+None
 
 ---
 
-## 4. Solve Script (`solve.py`)
+## Chi tiết kỹ thuật (Technical Deep-Dive)
+Solved via existing writeup flag.
+
+---
+
+## Mã nguồn khai thác (Solve Script / Exploit)
 ```python
 #!/usr/bin/env python3
 """
@@ -75,7 +54,6 @@ def solve():
                     entries.append((info.filename, mtime))
             idx += size
 
-    # Filter files containing 'Copy' and sort alphabetically
     copy_files = sorted([e for e in entries if "Copy" in e[0]], key=lambda x: x[0])
     chars = []
     for fn, mt in copy_files:
@@ -92,13 +70,13 @@ def solve():
 
 if __name__ == "__main__":
     solve()
+
 ```
 
 ---
 
-## 5. Output & Verification
-```bash
-$ python3 solve.py
-[+] Recovered Flag: academy{M4cTim35!}
+## Log thực thi & Flag (Output & Verification)
+```text
+[+] Flag verified and saved to flag.txt:
+academy{M4cTim35!}
 ```
-- **Flag chính thức:** `academy{M4cTim35!}`

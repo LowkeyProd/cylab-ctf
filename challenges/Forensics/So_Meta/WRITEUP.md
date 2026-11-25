@@ -4,7 +4,7 @@
 - **Challenge:** So Meta (ID: 19)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/8179732d3bcbaaf9dadfc7fe08aa5b7fbf1d3189b0a2dc90eca34dca38a85b4a/pico_img.png`
+- **Server / Instance:** `N/A`
 - **Attached Files:** pico_img.png
 - **Official Flag:** `academy{s0_m3ta_45015e26}`
 
@@ -21,7 +21,7 @@ Find the flag in this <a href='https://challenge-files.cylabacademy.net/library/
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

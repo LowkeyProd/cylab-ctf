@@ -1,9 +1,0 @@
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [SETUP] Setting up challenge #163 (Static ain't always noise) in /Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Static_ain't_always_noise
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [CONNECTION] Resolved connection target: https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/static (host=challenge-files.cylabacademy.net, port=443)
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [DOWNLOAD] Downloaded static (16040 bytes)
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [DOWNLOAD] Downloaded ltdis.sh (785 bytes)
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [FLOW_START] Starting end-to-end solve flow for challenge #163 (Static ain't always noise)
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [HEURISTICS_START] Running automated fast solver heuristics for #163 (Static ain't always noise)...
-[2026-10-17 00:12:52] [SUCCESS] [#163 Static ain't always noise] [STAGE_1_SUCCESS] Solved in Stage 1 (Fast Heuristics): academy{d15a5m_t34s3r_fac3431a}
-[2026-10-17 00:12:52] [INFO] [#163 Static ain't always noise] [SUBMISSION] Submitting flag 'academy{d15a5m_t34s3r_fac3431a}' to platform...
-[2026-10-17 00:12:53] [SUCCESS] [#163 Static ain't always noise] [SUBMISSION_SUCCESS] Platform confirmed flag correct: academy{d15a5m_t34s3r_fac3431a}

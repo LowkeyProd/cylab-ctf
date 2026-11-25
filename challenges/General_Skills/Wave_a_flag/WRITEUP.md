@@ -4,7 +4,7 @@
 - **Challenge:** Wave a flag (ID: 170)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/7370c7c01b6da3581f45bd49c1e76752891ec49a2da06ba55ae6db18e5d036a4/warm`
+- **Server / Instance:** `N/A`
 - **Attached Files:** warm
 - **Official Flag:** `academy{b1scu1ts_4nd_gr4vy_57d8c79}`
 
@@ -12,7 +12,7 @@
 
 ## Mô tả bài toán (Overview / Analysis)
 Can you invoke help flags for a tool or binary? This program has extraordinarily helpful information...
-<a href='https://challenge-files.cylabacademy.net/library/7370c7c01b6da3581f45bd49c1e76752891ec49a2da06ba55ae6db18e5d036a4/warm' download>warm</a>
+<a href='https://challenge-files.cylabacademy.net/library/66dd9288cd84ecc152a833ed9b86decbf99f8f652f2989fa5bd37801de613ed6/warm' download>warm</a>
 
 ### Hints
 - This program will only work in the webshell or another Linux computer.
@@ -24,7 +24,7 @@ Can you invoke help flags for a tool or binary? This program has extraordinarily
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 

@@ -1,0 +1,7 @@
+[2026-10-29 18:48:46] [INFO] [#351 HideToSee] [SETUP] Setting up challenge #351 (HideToSee) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\HideToSee
+[2026-10-29 18:48:47] [INFO] [#351 HideToSee] [DOWNLOAD] Downloaded atbash.jpg (51501 bytes)
+[2026-10-29 18:48:47] [INFO] [#351 HideToSee] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\HideToSee
+[2026-10-29 18:48:47] [INFO] [#351 HideToSee] [FLOW_START] Starting improved end-to-end solve flow for challenge #351 (HideToSee)
+[2026-10-29 18:48:48] [INFO] [#351 HideToSee] [STAGE_WRITEUP_START] Prioritizing writeup solving for #351
+[2026-10-29 18:48:48] [SUCCESS] [#351 HideToSee] [FLAG_SUBMISSION_SUCCESS] Accepted flag variant: academy{atbash_crack_02f11bb3}
+[2026-10-29 18:48:48] [SUCCESS] [#351 HideToSee] [STAGE_WRITEUP_SUCCESS] Solved via writeup static flag: academy{atbash_crack_02f11bb3}

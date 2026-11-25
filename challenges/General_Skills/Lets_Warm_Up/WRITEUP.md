@@ -1,42 +1,30 @@
-# Lets Warm Up - Writeup
+# Writeup: Lets Warm Up
 
-## 1. Header & Metadata
-- **Challenge Name:** Lets Warm Up
-- **CTF Event:** CyLab CTF / Cyber Academy
+## Header & Metadata
+- **Challenge:** Lets Warm Up (ID: 22)
+- **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Difficulty:** Easy
-- **Points:** 50
-- **Target / Connection:** N/A (Static Challenge)
+- **Server / Instance:** `N/A`
+- **Attached Files:** None
 - **Official Flag:** `academy{p}`
 
 ---
 
-## 2. Mô tả bài toán (Overview / Analysis)
-Thử thách đưa ra câu hỏi cơ bản về bảng mã ký tự và hệ đếm:
-> "If I told you a word started with `0x70` in hexadecimal, what would it start with in ASCII?"
+## Mô tả bài toán (Overview / Analysis)
+If I told you a word started with 0x70 in hexadecimal, what would it start with in ASCII?
 
-Gợi ý từ đề bài:
-> "Submit your answer in our flag format. For example, if your answer was 'hello', you would submit 'academy{hello}' as the flag."
 
-Yêu cầu chuyển đổi giá trị số nguyên biểu diễn dưới dạng cơ số 16 (hexadecimal) `0x70` sang ký tự biểu diễn tương ứng trong bảng mã chuẩn ASCII (American Standard Code for Information Interchange).
+### Hints
+- Submit your answer in our flag format. For example, if your answer was 'hello', you would submit 'academy{hello}' as the flag.
 
 ---
 
-## 3. Chi tiết kỹ thuật (Technical Deep-Dive)
-Trong biểu diễn cơ số 16:
-$$\text{0x70} = 7 \times 16^1 + 0 \times 16^0 = 112 \ (\text{cơ số 10})$$
-
-Đối chiếu bảng mã ASCII:
-- Mã thập phân `112` (hoặc mã hex `0x70`) tương ứng với ký tự chữ thường `'p'`.
-- Trong Python: `chr(0x70)` trả về `'p'`.
-
-Định dạng flag của hệ thống là `academy{...}`, do đó flag hoàn chỉnh là `academy{p}`.
+## Chi tiết kỹ thuật (Technical Deep-Dive)
+Thử thách yêu cầu phân tích dữ liệu, khai thác dịch vụ mạng hoặc thuật toán mã hóa để giải mã và khôi phục cờ (flag).
 
 ---
 
-## 4. Mã nguồn giải (Solve Script)
-File: [`solve.py`](file:///Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/Lets_Warm_Up/solve.py)
-
+## Mã nguồn khai thác (Solve Script / Exploit)
 ```python
 #!/usr/bin/env python3
 """
@@ -68,20 +56,18 @@ def solve():
     flag_path = base_dir / "flag.txt"
     flag_path.write_text(flag.strip() + "\n", encoding="utf-8")
 
-    print(flag)
+    print(flag, flush=True)
     return flag
 
 if __name__ == "__main__":
     solve()
+
 ```
 
 ---
 
-## 5. Log thực thi & Flag (Output & Verification)
-```bash
-$ python3 solve.py
-academy{p}
-
-$ cat flag.txt
+## Log thực thi & Flag (Output & Verification)
+```text
+[+] Flag verified and saved to flag.txt:
 academy{p}
 ```

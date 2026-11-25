@@ -1,0 +1,114 @@
+# Writeup: Ready Gladiator 0
+
+## Header & Metadata
+- **Challenge:** Ready Gladiator 0 (ID: 368)
+- **CTF Event / Platform:** CyLab Security Academy
+- **Category:** Reverse Engineering
+- **Server / Instance:** `nc chatelaine.cylabacademy.net 13600`
+- **Attached Files:** imp.red
+- **Official Flag:** `academy{h3r0_t0_z3r0_4m1r1gh7_609c570e}`
+
+---
+
+## Mô tả bài toán (Overview / Analysis)
+Can you make a CoreWars warrior that always loses, no ties?
+Your opponent is the Imp. The source is available 
+<a href='https://challenge-files.cylabacademy.net/library/6e61bb1dd7013ad25891a3044beebde824bdc64d71780f90d19502acefc0e9e0/imp.red' download>here</a>. If you wanted to pit the Imp against
+himself, you could download the Imp and connect to the CoreWars server like
+this:
+
+`nc chatelaine.cylabacademy.net 13600 < imp.red`
+
+### Hints
+- CoreWars is a well-established game with a lot of docs and strategy
+- Experiment with input to the CoreWars handler or create a self-defeating bot
+
+---
+
+## Chi tiết kỹ thuật (Technical Deep-Dive)
+Solved autonomously by Antigravity CTF Agent.
+
+---
+
+## Mã nguồn khai thác (Solve Script / Exploit)
+```python
+#!/usr/bin/env python3
+"""
+Solve script for Ready Gladiator 0 (#368)
+Target dynamically read from connection.cfg
+"""
+import re
+import socket
+import time
+from pathlib import Path
+
+def get_target_conn():
+    cfg_file = Path(__file__).resolve().parent / "connection.cfg"
+    host, port = "chatelaine.cylabacademy.net", 13600
+    if cfg_file.exists():
+        for line in cfg_file.read_text().splitlines():
+            line = line.strip()
+            if line.startswith("HOST=") and line.split("=", 1)[1]:
+                host = line.split("=", 1)[1].strip()
+            elif line.startswith("PORT=") and line.split("=", 1)[1]:
+                try:
+                    port = int(line.split("=", 1)[1].strip())
+                except Exception:
+                    pass
+    return host, port
+
+def solve():
+    host, port = get_target_conn()
+    print(f"[*] Connecting to {host}:{port}...", flush=True)
+    
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    
+    # Receive banner / prompt
+    initial = s.recv(1024).decode(errors="ignore")
+    print(f"[*] Received: {initial.strip()}", flush=True)
+    
+    # CoreWars warrior that terminates immediately upon execution (DAT instruction kills process)
+    # causing warrior 1 to lose all 100 rounds with 0 ties.
+    payload = ";redcode\n;name Loser\n;assert 1\ndat 0, 0\nend\n"
+    s.sendall(payload.encode())
+    
+    response = b""
+    while True:
+        try:
+            s.settimeout(3.0)
+            chunk = s.recv(4096)
+            if not chunk:
+                break
+            response += chunk
+        except Exception:
+            break
+    s.close()
+    
+    output = response.decode(errors="ignore")
+    print(f"[*] Server response:\n{output}", flush=True)
+    
+    match = re.search(r"(academy\{[^}]+\}|picoCTF\{[^}]+\})", output)
+    if match:
+        flag = match.group(1)
+        print(f"[+] Flag found: {flag}", flush=True)
+        with open("flag.txt", "w") as f:
+            f.write(flag + "\n")
+        print("[+] Flag saved to flag.txt", flush=True)
+        return flag
+    else:
+        print("[-] Flag not found in output", flush=True)
+        return None
+
+if __name__ == "__main__":
+    solve()
+
+```
+
+---
+
+## Log thực thi & Flag (Output & Verification)
+```text
+[+] Flag verified and saved to flag.txt:
+academy{h3r0_t0_z3r0_4m1r1gh7_609c570e}
+```

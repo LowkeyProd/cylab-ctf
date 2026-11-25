@@ -1,0 +1,18 @@
+{
+  "id": 144,
+  "name": "Mod 26",
+  "category": "Cryptography",
+  "difficulty": 1,
+  "points": 10,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "values.txt"
+  ],
+  "hints": [
+    "This can be solved online if you don't want to do it by hand!"
+  ],
+  "description": "Cryptography can be easy, do you know what ROT13 is?\n<a href='https://challenge-files.cylabacademy.net/library/b4b7a760f3cbe1217f2bcfd5d245310af6ed136d50e2884ec79deb6e078b30ce/values.txt' download>values.txt</a>"
+}

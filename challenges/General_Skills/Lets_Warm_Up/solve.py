@@ -28,7 +28,7 @@ def solve():
     flag_path = base_dir / "flag.txt"
     flag_path.write_text(flag.strip() + "\n", encoding="utf-8")
 
-    print(flag)
+    print(flag, flush=True)
     return flag
 
 if __name__ == "__main__":

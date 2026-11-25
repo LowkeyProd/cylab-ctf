@@ -6,9 +6,31 @@ Extracts UDP stream payloads from shark-on-wire-1-capture.pcap to recover the fl
 import os
 import re
 import struct
+import urllib.request
 
-PCAP_FILE = os.path.join(os.path.dirname(__file__), "shark-on-wire-1-capture.pcap")
-FLAG_FILE = os.path.join(os.path.dirname(__file__), "flag.txt")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PCAP_FILE = os.path.join(BASE_DIR, "shark-on-wire-1-capture.pcap")
+CONFIG_FILE = os.path.join(BASE_DIR, "connection.cfg")
+FLAG_FILE = os.path.join(BASE_DIR, "flag.txt")
+
+def load_connection_config(cfg_path):
+    config = {}
+    if os.path.exists(cfg_path):
+        with open(cfg_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and "=" in line and not line.startswith("#"):
+                    k, v = line.split("=", 1)
+                    config[k.strip()] = v.strip()
+    return config
+
+def ensure_pcap_exists():
+    if not os.path.exists(PCAP_FILE):
+        config = load_connection_config(CONFIG_FILE)
+        pcap_url = config.get("URL")
+        if pcap_url:
+            print(f"Downloading pcap from {pcap_url}...", flush=True)
+            urllib.request.urlretrieve(pcap_url, PCAP_FILE)
 
 def extract_udp_streams(pcap_path):
     with open(pcap_path, "rb") as f:
@@ -49,7 +71,13 @@ def extract_udp_streams(pcap_path):
 
     return streams
 
+def is_decoy(flag_str):
+    lower_flag = flag_str.lower()
+    decoys = ["decoy", "fake", "honey", "honeypot", "dummy", "n0t_a_flag", "not_the_flag", "not_a_flag"]
+    return any(d in lower_flag for d in decoys)
+
 def solve():
+    ensure_pcap_exists()
     streams = extract_udp_streams(PCAP_FILE)
     flag_candidates = []
 
@@ -57,17 +85,17 @@ def solve():
         data = b"".join(payloads).decode(errors="ignore")
         matches = re.findall(r"(?:academy|picoCTF)\{[^}]+\}", data)
         for match in matches:
-            if "N0t_a_fLag" not in match:
+            if not is_decoy(match):
                 flag_candidates.append(match)
 
     if not flag_candidates:
         raise ValueError("Flag not found in packet capture!")
 
     flag = flag_candidates[0]
-    with open(FLAG_FILE, "w") as f:
+    with open(FLAG_FILE, "w", encoding="utf-8") as f:
         f.write(flag + "\n")
 
-    print(flag)
+    print(flag, flush=True)
     return flag
 
 if __name__ == "__main__":

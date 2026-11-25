@@ -4,15 +4,15 @@
 - **Challenge:** WhitePages (ID: 51)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/f500839660c0dddc9df4e5410dcd8e4d5a27f7ebae825caad4690a9d1646a451/whitepages.txt`
+- **Server / Instance:** `N/A`
 - **Attached Files:** whitepages.txt
-- **Official Flag:** `academy{not_all_spaces_are_created_equal_5fe1602ea91f835386aa3eae672cf4e3}`
+- **Official Flag:** `academy{not_all_spaces_are_created_equal_19fc1787ee14ef2c56ee0cddc142a0d9}`
 
 ---
 
 ## Mô tả bài toán (Overview / Analysis)
 
-I stopped using YellowPages and moved onto WhitePages... but <a href='https://challenge-files.cylabacademy.net/library/f500839660c0dddc9df4e5410dcd8e4d5a27f7ebae825caad4690a9d1646a451/whitepages.txt' download>the page they gave me</a> is all blank!
+I stopped using YellowPages and moved onto WhitePages... but <a href='https://challenge-files.cylabacademy.net/library/53f38374e47a48424dc7e9100aba4e4b42a590f3921cfc31188171ae7d6d61e3/whitepages.txt' download>the page they gave me</a> is all blank!
 
 ### Hints
 - There is data encoded somewhere... there might be an online decoder.
@@ -20,7 +20,7 @@ I stopped using YellowPages and moved onto WhitePages... but <a href='https://ch
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 
@@ -82,5 +82,5 @@ if __name__ == "__main__":
 ## Log thực thi & Flag (Output & Verification)
 ```text
 [+] Flag verified and saved to flag.txt:
-academy{not_all_spaces_are_created_equal_5fe1602ea91f835386aa3eae672cf4e3}
+academy{not_all_spaces_are_created_equal_19fc1787ee14ef2c56ee0cddc142a0d9}
 ```

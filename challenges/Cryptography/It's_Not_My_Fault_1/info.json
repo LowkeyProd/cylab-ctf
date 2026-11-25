@@ -1,0 +1,14 @@
+{
+  "id": 123,
+  "name": "It's Not My Fault 1",
+  "category": "Cryptography",
+  "difficulty": 3,
+  "points": 100,
+  "on_demand": true,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [],
+  "hints": [],
+  "description": "What do you mean RSA with CRT has an attack that's not a fault attack?"
+}

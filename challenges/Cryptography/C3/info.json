@@ -1,0 +1,19 @@
+{
+  "id": 407,
+  "name": "C3",
+  "category": "Cryptography",
+  "difficulty": 2,
+  "points": 200,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "ciphertext",
+    "convert.py"
+  ],
+  "hints": [
+    "Modern crypto schemes don't depend on the encoder to be secret, but this one\n  does."
+  ],
+  "description": "This is the Custom Cyclical Cipher!\n\nDownload the ciphertext <a href='https://challenge-files.cylabacademy.net/library/fb4743509774955556141c96d067e6eabc71a6b5d566329b2ab0a53c102e9e13/ciphertext' download>here</a>.\n\nDownload the encoder <a href='https://challenge-files.cylabacademy.net/library/fb4743509774955556141c96d067e6eabc71a6b5d566329b2ab0a53c102e9e13/convert.py' download>here</a>.\n\nEnclose the flag in our wrapper for submission. If the flag was \"example\" you\nwould submit \"academy{example}\".\n"
+}

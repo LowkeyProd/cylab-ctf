@@ -49,7 +49,7 @@ def solve():
     flag_file.write_text(flag.strip() + "\n", encoding="utf-8")
 
     # Output exact decoded token cleanly
-    print(flag)
+    print(flag, flush=True)
     return flag
 
 

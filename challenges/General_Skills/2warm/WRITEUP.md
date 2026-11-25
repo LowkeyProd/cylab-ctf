@@ -20,7 +20,7 @@ Can you convert the number 42 (base 10) to binary (base 2)?
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

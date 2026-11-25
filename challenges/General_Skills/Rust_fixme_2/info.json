@@ -1,0 +1,18 @@
+{
+  "id": 462,
+  "name": "Rust fixme 2",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "fixme2.tar.gz"
+  ],
+  "hints": [
+    "https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html"
+  ],
+  "description": "The Rust saga continues? I ask you, can I borrow that, pleeeeeaaaasseeeee?\n\nDownload the Rust code <a href='https://challenge-files.cylabacademy.net/library/048c73621a97b98cde18eae5a9495279f2396cb64c65235bb310e7ad26d726ac/fixme2.tar.gz' download>here</a>.\n"
+}

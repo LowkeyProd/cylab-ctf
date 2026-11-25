@@ -4,7 +4,7 @@
 - **Challenge:** Tab, Tab, Attack (ID: 176)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/298b799316c13103156a84f949a6cb6e02efd5cdb0ee09700231527df92ed468/Addadshashanammu.zip`
+- **Server / Instance:** `N/A`
 - **Attached Files:** Addadshashanammu.zip
 - **Official Flag:** `academy{l3v3l_up!_t4k3_4_r35t!_9d928112}`
 
@@ -12,7 +12,7 @@
 
 ## Mô tả bài toán (Overview / Analysis)
 Using tabcomplete in the Terminal will add years to your life, esp. when dealing with long rambling directory structures and filenames.
-<a href='https://challenge-files.cylabacademy.net/library/298b799316c13103156a84f949a6cb6e02efd5cdb0ee09700231527df92ed468/Addadshashanammu.zip' download>Addadshashanammu.zip</a>
+<a href='https://challenge-files.cylabacademy.net/library/a936a8ba121e347c812a528aa656def019876985f15b6b1e28d14fc64e38407b/Addadshashanammu.zip' download>Addadshashanammu.zip</a>
 
 ### Hints
 - After `unzip`ing, this problem can be solved with 11 button-presses...(mostly Tab)...
@@ -20,7 +20,7 @@ Using tabcomplete in the Terminal will add years to your life, esp. when dealing
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 

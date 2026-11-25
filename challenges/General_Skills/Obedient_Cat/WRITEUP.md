@@ -4,7 +4,7 @@
 - **Challenge:** Obedient Cat (ID: 147)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/8a31150b13936d91fd7467e1a7c7f176ead316509772c06dbc6c95b3c44d7647/flag`
+- **Server / Instance:** `N/A`
 - **Attached Files:** flag
 - **Official Flag:** `academy{s4n1ty_v3r1f13d_61ddac22}`
 
@@ -22,7 +22,7 @@ This file has a flag in plain sight (aka "in-the-clear").
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 

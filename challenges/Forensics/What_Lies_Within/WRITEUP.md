@@ -4,7 +4,7 @@
 - **Challenge:** What Lies Within (ID: 74)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/5235bfccd8f3cc2d059ee828f774846542f28f7ec66cb4f0c6ceb536c38026d4/buildings.png`
+- **Server / Instance:** `N/A`
 - **Attached Files:** buildings.png
 - **Official Flag:** `academy{h1d1ng_1n_th3_b1t5}`
 
@@ -20,7 +20,7 @@ There's something in the <a href='https://challenge-files.cylabacademy.net/libra
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

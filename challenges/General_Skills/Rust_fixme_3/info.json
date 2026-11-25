@@ -1,0 +1,18 @@
+{
+  "id": 463,
+  "name": "Rust fixme 3",
+  "category": "General Skills",
+  "difficulty": 1,
+  "points": 100,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "fixme3.tar.gz"
+  ],
+  "hints": [
+    "Read the comments...darn it!"
+  ],
+  "description": "Have you heard of Rust? Fix the syntax errors in this Rust file to print the flag!\n\nDownload the Rust code <a href='https://challenge-files.cylabacademy.net/library/6df8b7779faf29e53f515922041d99bc26381a332ca090c291ba20577ac7cf92/fixme3.tar.gz' download>here</a>.\n"
+}

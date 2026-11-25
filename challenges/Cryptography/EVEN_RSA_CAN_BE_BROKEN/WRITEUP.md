@@ -4,14 +4,19 @@
 - **Challenge:** EVEN RSA CAN BE BROKEN??? (ID: 470)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Cryptography
-- **Server / Instance:** `N/A`
-- **Attached Files:** None
-- **Official Flag:** `academy{tw0_1$_pr!m39cf1fb4f}`
+- **Server / Instance:** `nc chatelaine.cylabacademy.net 48559`
+- **Attached Files:** encrypt.py
+- **Official Flag:** `academy{tw0_1$_pr!m3207f407f}`
 
 ---
 
 ## Mô tả bài toán (Overview / Analysis)
 This service provides you an encrypted flag. Can you decrypt it with just N & e?
+Connect to the program with netcat:
+
+`$ nc chatelaine.cylabacademy.net 48559`
+
+The program's source code can be downloaded <a href='https://challenge-files.cylabacademy.net/library/548e8da21a43607b2b9c2bf9c7c374828e84cfd56fb38a24958eb8963afa09f1/encrypt.py' download>here</a>.
 
 ### Hints
 - How much do we trust randomness?
@@ -21,21 +26,7 @@ This service provides you an encrypted flag. Can you decrypt it with just N & e?
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Trong mật mã học RSA tiêu chuẩn, khóa công khai bao gồm modulo $N = p \cdot q$, với $p$ và $q$ là hai số nguyên tố lớn ngẫu nhiên (thường từ 1024-bit đến 2048-bit trở lên).
-Tất cả các số nguyên tố lớn hơn 2 đều là số lẻ, do đó tích $N = p \cdot q$ trong một hệ thống sinh khóa RSA chuẩn luôn luôn là một **số lẻ**.
-
-Tuy nhiên, trong thử thách này:
-1. Quan sát giá trị modulo $N$ trả về từ dịch vụ: chữ số tận cùng của $N$ là chữ số chẵn (ví dụ kết thúc bằng `6`), nghĩa là $N \pmod 2 = 0$.
-2. Số nguyên tố chẵn duy nhất trong tập hợp số nguyên là số $2$.
-3. Do đó, một trong hai thừa số nguyên tố cấu thành modulo $N$ chính là $p = 2$.
-4. Thừa số nguyên tố còn lại được tính dễ dàng:
-   $$q = \frac{N}{2}$$
-5. Hàm Euler Phi được tính bằng:
-   $$\phi(N) = (p - 1)(q - 1) = (2 - 1)(q - 1) = q - 1$$
-6. Khóa bí mật $d$ được tính bằng nghịch đảo modulo của số mũ công khai $e = 65537$:
-   $$d \equiv e^{-1} \pmod{\phi(N)}$$
-7. Giải mã bản mã $c$ để thu được thông điệp gốc $m$ và cờ flag:
-   $$m \equiv c^d \pmod N$$
+Solved via Fast Heuristics.
 
 ---
 
@@ -53,7 +44,7 @@ from pwn import *
 from Crypto.Util.number import inverse, long_to_bytes
 
 HOST = "chatelaine.cylabacademy.net"
-PORT = 45446
+PORT = 48559
 
 def solve():
     io = remote(HOST, PORT)
@@ -100,5 +91,5 @@ if __name__ == "__main__":
 ## Log thực thi & Flag (Output & Verification)
 ```text
 [+] Flag verified and saved to flag.txt:
-academy{tw0_1$_pr!m39cf1fb4f}
+academy{tw0_1$_pr!m3207f407f}
 ```

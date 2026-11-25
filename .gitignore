@@ -18,3 +18,9 @@ Thumbs.db
 
 # Large temporary binary memory dump snapshots
 *.heapsnapshot
+
+*.bak
+
+*.img
+*.iso
+*.vmdk

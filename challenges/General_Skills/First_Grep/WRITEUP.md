@@ -4,15 +4,15 @@
 - **Challenge:** First Grep (ID: 85)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/3ff907ca5b2c4bf9b5c47914ad89787b1dcbf5e88d99b96c52eb652a6b5f3729/file`
+- **Server / Instance:** `N/A`
 - **Attached Files:** file
-- **Official Flag:** `academy{grep_is_good_to_find_things_d00Ca181}`
+- **Official Flag:** `academy{grep_is_good_to_find_things_b9De1cAb}`
 
 ---
 
 ## Mô tả bài toán (Overview / Analysis)
 Can you find the flag in the file? This would be really tedious to look through manually, something tells me there is a better way.
-The flag is in this <a href='https://challenge-files.cylabacademy.net/library/3ff907ca5b2c4bf9b5c47914ad89787b1dcbf5e88d99b96c52eb652a6b5f3729/file' download>file</a>.
+The flag is in this <a href='https://challenge-files.cylabacademy.net/library/92db87573ed8c5d7bb720cbe14f6884c1295c16b5bf6b8fee9725cae249551aa/file' download>file</a>.
 
 ### Hints
 - grep [tutorial](https://ryanstutorials.net/linuxtutorial/grep.php)
@@ -20,7 +20,7 @@ The flag is in this <a href='https://challenge-files.cylabacademy.net/library/3f
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 
@@ -69,5 +69,5 @@ if __name__ == "__main__":
 ## Log thực thi & Flag (Output & Verification)
 ```text
 [+] Flag verified and saved to flag.txt:
-academy{grep_is_good_to_find_things_d00Ca181}
+academy{grep_is_good_to_find_things_b9De1cAb}
 ```

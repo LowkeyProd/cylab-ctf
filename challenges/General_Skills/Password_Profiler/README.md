@@ -4,7 +4,7 @@
 - **Difficulty:** Easy
 - **Points:** 100
 - **Instance Required:** No
-- **Connection:** `https://challenge-files.cylabacademy.net/library/eee2a66921bd7ab65c6464f5293a9d15cc01c8631a0dc4c9668db8a2525639fc/userinfo.txt`
+- **Connection:** `N/A`
 
 ## Description
 We intercepted a suspicious file from a system, but instead of the password itself, it only contains its SHA-1 hash. Using OSINT techniques, you are provided with personal details about the target. Your task is to leverage this information to generate a custom password list and recover the original password by matching its hash.

@@ -6,13 +6,12 @@
 - **Category:** General Skills
 - **Server / Instance:** `N/A`
 - **Attached Files:** None
-- **Official Flag:** `academy{nEtCat_Mast3ry_eb8Afcd3}`
+- **Official Flag:** `academy{nEtCat_Mast3ry_abbFbc0e}`
 
 ---
 
 ## Mô tả bài toán (Overview / Analysis)
 
-Using netcat (nc) is going to be pretty important. Can you connect to `xebec.cylabacademy.net` at port `43155` to get the flag?
 
 ### Hints
 - nc [tutorial](https://linux.die.net/man/1/nc)
@@ -20,7 +19,7 @@ Using netcat (nc) is going to be pretty important. Can you connect to `xebec.cyl
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Thử thách yêu cầu phân tích dữ liệu, khai thác dịch vụ mạng hoặc thuật toán mã hóa để giải mã và khôi phục cờ (flag).
 
 ---
 
@@ -48,15 +47,15 @@ def parse_connection_cfg(cfg_path: Path):
     return config
 
 def solve():
-    print("[*] Solving what's a net cat?...")
+    print("[*] Solving what's a net cat?...", flush=True)
     cfg_file = Path(__file__).parent / "connection.cfg"
     config = parse_connection_cfg(cfg_file)
 
     host = config.get("HOST") or "xebec.cylabacademy.net"
     port_str = config.get("PORT")
-    port = int(port_str) if port_str and port_str != "0" else 43155
+    port = int(port_str) if port_str and port_str != "0" else 46647
 
-    print(f"[*] Connecting to {host}:{port}...")
+    print(f"[*] Connecting to {host}:{port}...", flush=True)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(10.0)
     s.connect((host, port))
@@ -73,7 +72,7 @@ def solve():
     s.close()
 
     text = response.decode("utf-8", errors="replace")
-    print(f"[*] Received response:\n{text}")
+    print(f"[*] Received response:\n{text}", flush=True)
 
     match = re.search(r"(academy\{[^}]+\}|picoCTF\{[^}]+\})", text)
     if not match:
@@ -82,7 +81,7 @@ def solve():
     flag = match.group(1)
     flag_path = Path(__file__).parent / "flag.txt"
     flag_path.write_text(flag.strip() + "\n")
-    print(f"[+] Flag found: {flag}")
+    print(f"[+] Flag found: {flag}", flush=True)
     return flag
 
 if __name__ == "__main__":
@@ -95,5 +94,5 @@ if __name__ == "__main__":
 ## Log thực thi & Flag (Output & Verification)
 ```text
 [+] Flag verified and saved to flag.txt:
-academy{nEtCat_Mast3ry_eb8Afcd3}
+academy{nEtCat_Mast3ry_abbFbc0e}
 ```

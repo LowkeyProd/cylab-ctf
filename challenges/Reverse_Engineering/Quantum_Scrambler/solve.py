@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+"""
+Solve script for Quantum Scrambler (#479)
+"""
+import ast
+import os
+import socket
+from pathlib import Path
+
+def get_target_conn():
+    cfg_file = Path(__file__).resolve().parent / "connection.cfg"
+    host, port = "chatelaine.cylabacademy.net", 19972
+    if cfg_file.exists():
+        for line in cfg_file.read_text().splitlines():
+            line = line.strip()
+            if line.startswith("HOST=") and line.split("=", 1)[1]:
+                host = line.split("=", 1)[1].strip()
+            elif line.startswith("PORT=") and line.split("=", 1)[1]:
+                try:
+                    port = int(line.split("=", 1)[1].strip())
+                except Exception:
+                    pass
+    return host, port
+
+def solve():
+    host, port = get_target_conn()
+    print(f"[*] Connecting to {host}:{port}...", flush=True)
+    
+    s = socket.create_connection((host, port))
+    raw_data = b""
+    while True:
+        chunk = s.recv(4096)
+        if not chunk:
+            break
+        raw_data += chunk
+    s.close()
+    
+    text = raw_data.decode("utf-8", errors="ignore").strip()
+    print(f"[*] Received {len(text)} characters of data.", flush=True)
+    
+    # Parse the cypher representation
+    cypher = ast.literal_eval(text)
+    
+    # Extract the top-level string hex values in order
+    flag_chars = []
+    for item in cypher:
+        for x in item:
+            if isinstance(x, str):
+                flag_chars.append(chr(int(x, 16)))
+                
+    flag = "".join(flag_chars)
+    print(f"[+] Flag found: {flag}", flush=True)
+    
+    # Verify flag pattern and absence of decoy strings
+    assert "academy{" in flag or "picoCTF{" in flag, "Invalid flag pattern!"
+    for decoy in ["fake", "decoy", "honey", "not_the_flag", "dummy"]:
+        assert decoy not in flag.lower(), f"Decoy flag detected: {decoy}"
+        
+    flag_path = Path(__file__).resolve().parent / "flag.txt"
+    with open(flag_path, "w", encoding="utf-8") as f:
+        f.write(flag + "\n")
+    print(f"[+] Flag successfully written to {flag_path}", flush=True)
+
+if __name__ == "__main__":
+    solve()

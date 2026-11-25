@@ -1,0 +1,20 @@
+{
+  "id": 298,
+  "name": "SideChannel",
+  "category": "Forensics",
+  "difficulty": 3,
+  "points": 400,
+  "on_demand": true,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "pin_checker"
+  ],
+  "hints": [
+    "Read about \"timing-based side-channel attacks.\"",
+    "Attempting to reverse-engineer or exploit the binary won't help you, you can figure out the PIN just by interacting with it and measuring certain properties about it.",
+    "Don't run your attacks against the master server, it is secured against them. The PIN code you get from the `pin_checker` binary is the same as the one for the master server."
+  ],
+  "description": "There's something fishy about this PIN-code checker, can you figure out the PIN and get the flag?\n\nDownload the PIN checker program here <a href='https://challenge-files.cylabacademy.net/library/616ad6e80d5e2bb925a2618b1baf907751cd39cb0966e716a78505d98a4771b0/pin_checker' download>pin_checker</a>"
+}

@@ -4,7 +4,7 @@
 - **Difficulty:** Medium
 - **Points:** 250
 - **Instance Required:** No
-- **Connection:** `https://challenge-files.cylabacademy.net/library/aa2c48f05edb24ca322b4f28952e172d0b0540d7a55d14ebbbba84415951ec6e/suspicious.dd.sda1`
+- **Connection:** `N/A`
 
 ## Description
 'Suspicious' is written all over this disk image. 

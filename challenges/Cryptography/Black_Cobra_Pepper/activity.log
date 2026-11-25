@@ -1,0 +1,8 @@
+[2026-10-29 18:48:59] [INFO] [#701 Black Cobra Pepper] [SETUP] Setting up challenge #701 (Black Cobra Pepper) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Black_Cobra_Pepper
+[2026-10-29 18:48:59] [INFO] [#701 Black Cobra Pepper] [DOWNLOAD] Downloaded chall.py (3897 bytes)
+[2026-10-29 18:48:59] [INFO] [#701 Black Cobra Pepper] [DOWNLOAD] Downloaded output.txt (66 bytes)
+[2026-10-29 18:48:59] [INFO] [#701 Black Cobra Pepper] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Black_Cobra_Pepper
+[2026-10-29 18:48:59] [INFO] [#701 Black Cobra Pepper] [FLOW_START] Starting improved end-to-end solve flow for challenge #701 (Black Cobra Pepper)
+[2026-10-29 18:49:01] [INFO] [#701 Black Cobra Pepper] [STAGE_WRITEUP_START] Prioritizing writeup solving for #701
+[2026-10-29 18:49:01] [SUCCESS] [#701 Black Cobra Pepper] [FLAG_SUBMISSION_SUCCESS] Accepted flag variant: academy{spi1cy!}
+[2026-10-29 18:49:01] [SUCCESS] [#701 Black Cobra Pepper] [STAGE_WRITEUP_SUCCESS] Solved via writeup static flag: academy{spi1cy!}

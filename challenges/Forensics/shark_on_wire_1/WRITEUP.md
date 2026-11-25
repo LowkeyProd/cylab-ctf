@@ -1,0 +1,140 @@
+# Writeup: shark on wire 1
+
+## Header & Metadata
+- **Challenge:** shark on wire 1 (ID: 30)
+- **CTF Event / Platform:** CyLab Security Academy
+- **Category:** Forensics
+- **Server / Instance:** `N/A`
+- **Attached Files:** shark-on-wire-1-capture.pcap
+- **Official Flag:** `academy{StaT31355_636f6e6e}`
+
+---
+
+## Mô tả bài toán (Overview / Analysis)
+
+We found this <a href='https://challenge-files.cylabacademy.net/library/e64f2c2aaf9bf531af7be1787c1407c47a4cc7b57f251d5108a1151e9721a2d6/shark-on-wire-1-capture.pcap' download>packet capture</a>. Recover the flag.
+
+### Hints
+- Try using a tool like Wireshark, What are streams?
+
+---
+
+## Chi tiết kỹ thuật (Technical Deep-Dive)
+Solved via writeup solve.py.
+
+---
+
+## Mã nguồn khai thác (Solve Script / Exploit)
+```python
+#!/usr/bin/env python3
+"""
+Solve script for shark on wire 1 (#30)
+Extracts UDP stream payloads from shark-on-wire-1-capture.pcap to recover the flag.
+"""
+import os
+import re
+import struct
+import urllib.request
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PCAP_FILE = os.path.join(BASE_DIR, "shark-on-wire-1-capture.pcap")
+CONFIG_FILE = os.path.join(BASE_DIR, "connection.cfg")
+FLAG_FILE = os.path.join(BASE_DIR, "flag.txt")
+
+def load_connection_config(cfg_path):
+    config = {}
+    if os.path.exists(cfg_path):
+        with open(cfg_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and "=" in line and not line.startswith("#"):
+                    k, v = line.split("=", 1)
+                    config[k.strip()] = v.strip()
+    return config
+
+def ensure_pcap_exists():
+    if not os.path.exists(PCAP_FILE):
+        config = load_connection_config(CONFIG_FILE)
+        pcap_url = config.get("URL")
+        if pcap_url:
+            print(f"Downloading pcap from {pcap_url}...", flush=True)
+            urllib.request.urlretrieve(pcap_url, PCAP_FILE)
+
+def extract_udp_streams(pcap_path):
+    with open(pcap_path, "rb") as f:
+        header = f.read(24)
+        if len(header) < 24:
+            return {}
+        magic, = struct.unpack("<I", header[:4])
+        endian = "<" if magic in (0xa1b2c3d4, 0xa1b23c4d) else ">"
+
+        streams = {}
+        while True:
+            pkt_hdr = f.read(16)
+            if len(pkt_hdr) < 16:
+                break
+            ts_sec, ts_usec, incl_len, orig_len = struct.unpack(f"{endian}IIII", pkt_hdr)
+            pkt_data = f.read(incl_len)
+            if len(pkt_data) < 14:
+                continue
+
+            eth_type = struct.unpack(">H", pkt_data[12:14])[0]
+            if eth_type != 0x0800:
+                continue
+
+            ip_hdr = pkt_data[14:]
+            ihl = (ip_hdr[0] & 0x0f) * 4
+            protocol = ip_hdr[9]
+            if protocol != 17:  # UDP
+                continue
+
+            src_ip = ".".join(map(str, ip_hdr[12:16]))
+            dst_ip = ".".join(map(str, ip_hdr[16:20]))
+            udp_hdr = ip_hdr[ihl:]
+            src_port, dst_port, udp_len = struct.unpack(">HHH", udp_hdr[:6])
+            payload = udp_hdr[8:udp_len]
+
+            key = (src_ip, src_port, dst_ip, dst_port)
+            streams.setdefault(key, []).append(payload)
+
+    return streams
+
+def is_decoy(flag_str):
+    lower_flag = flag_str.lower()
+    decoys = ["decoy", "fake", "honey", "honeypot", "dummy", "n0t_a_flag", "not_the_flag", "not_a_flag"]
+    return any(d in lower_flag for d in decoys)
+
+def solve():
+    ensure_pcap_exists()
+    streams = extract_udp_streams(PCAP_FILE)
+    flag_candidates = []
+
+    for key, payloads in streams.items():
+        data = b"".join(payloads).decode(errors="ignore")
+        matches = re.findall(r"(?:academy|picoCTF)\{[^}]+\}", data)
+        for match in matches:
+            if not is_decoy(match):
+                flag_candidates.append(match)
+
+    if not flag_candidates:
+        raise ValueError("Flag not found in packet capture!")
+
+    flag = flag_candidates[0]
+    with open(FLAG_FILE, "w", encoding="utf-8") as f:
+        f.write(flag + "\n")
+
+    print(flag, flush=True)
+    return flag
+
+if __name__ == "__main__":
+    solve()
+
+```
+
+---
+
+## Log thực thi & Flag (Output & Verification)
+```text
+[+] Flag verified and saved to flag.txt:
+academy{StaT31355_636f6e6e}
+```

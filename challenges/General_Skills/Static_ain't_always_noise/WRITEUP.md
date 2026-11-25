@@ -4,7 +4,7 @@
 - **Challenge:** Static ain't always noise (ID: 163)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/static`
+- **Server / Instance:** `N/A`
 - **Attached Files:** static, ltdis.sh
 - **Official Flag:** `academy{d15a5m_t34s3r_fac3431a}`
 
@@ -12,7 +12,7 @@
 
 ## Mô tả bài toán (Overview / Analysis)
 Can you look at the data in this binary? The bash script might help!
-<a href='https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/static' download>static</a>, <a href='https://challenge-files.cylabacademy.net/library/fbc420391fe28e2adcd05096604decb354d8ada0a715fc63dff030026865407b/ltdis.sh' download>ltdis.sh</a>
+<a href='https://challenge-files.cylabacademy.net/library/acbe8b20d09f77f775fbaaa76c55472213f8227409c856bd51cd2af401c7d0b6/static' download>static</a>, <a href='https://challenge-files.cylabacademy.net/library/acbe8b20d09f77f775fbaaa76c55472213f8227409c856bd51cd2af401c7d0b6/ltdis.sh' download>ltdis.sh</a>
 
 ### Hints
 None
@@ -20,7 +20,7 @@ None
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 

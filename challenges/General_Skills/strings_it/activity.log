@@ -1,8 +1,0 @@
-[2026-10-17 00:05:50] [INFO] [#37 strings it] [SETUP] Setting up challenge #37 (strings it) in /Users/lowkeyprod/Documents/USTH/CTF/cylab/challenges/General_Skills/strings_it
-[2026-10-17 00:05:50] [INFO] [#37 strings it] [CONNECTION] Resolved connection target: https://challenge-files.cylabacademy.net/library/dede17d717e026b75f6b9e7fb2c1601b46093ced6f209b8f6b27ffd883a9ae2f/strings (host=challenge-files.cylabacademy.net, port=443)
-[2026-10-17 00:05:50] [INFO] [#37 strings it] [DOWNLOAD] Downloaded strings (783696 bytes)
-[2026-10-17 00:05:50] [INFO] [#37 strings it] [FLOW_START] Starting end-to-end solve flow for challenge #37 (strings it)
-[2026-10-17 00:05:50] [INFO] [#37 strings it] [HEURISTICS_START] Running automated fast solver heuristics for #37 (strings it)...
-[2026-10-17 00:05:50] [SUCCESS] [#37 strings it] [STAGE_1_SUCCESS] Solved in Stage 1 (Fast Heuristics): academy{5tRIng5_1T_b1e21039}
-[2026-10-17 00:05:50] [INFO] [#37 strings it] [SUBMISSION] Submitting flag 'academy{5tRIng5_1T_b1e21039}' to platform...
-[2026-10-17 00:05:50] [SUCCESS] [#37 strings it] [SUBMISSION_SUCCESS] Platform confirmed flag correct: academy{5tRIng5_1T_b1e21039}

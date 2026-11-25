@@ -28,10 +28,11 @@ def solve():
     config = parse_config(cfg_path)
 
     host = config.get("HOST", "chatelaine.cylabacademy.net")
-    port = int(config.get("PORT", 37440))
+    port = int(config.get("PORT", 46644))
     username = config.get("USER", "ctf-player")
     password = config.get("PASS", "f6904eaa")
 
+    print(f"[*] Connecting to {host}:{port} as {username}...", flush=True)
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, port=port, username=username, password=password, timeout=15)
@@ -57,7 +58,7 @@ def solve():
     flag_file.write_text(flag + "\n", encoding="utf-8")
 
     # Print exact flag cleanly to standard output
-    print(flag)
+    print(flag, flush=True)
     return flag
 
 if __name__ == "__main__":

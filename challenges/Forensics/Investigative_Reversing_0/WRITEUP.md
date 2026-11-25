@@ -4,15 +4,15 @@
 - **Challenge:** Investigative Reversing 0 (ID: 70)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/c99dbff9da4f2317c128f3314ca15e30defdfbd0755d10a7ee3148bcafa0057a/investigative-reversing-0-mystery`
+- **Server / Instance:** `N/A`
 - **Attached Files:** investigative-reversing-0-mystery, investigative-reversing-0-mystery.png
-- **Official Flag:** `academy{f0und_1t_83c404e9}`
+- **Official Flag:** `academy{f0und_1t_c061a535}`
 
 ---
 
 ## Mô tả bài toán (Overview / Analysis)
 
-We have recovered a <a href='https://challenge-files.cylabacademy.net/library/c99dbff9da4f2317c128f3314ca15e30defdfbd0755d10a7ee3148bcafa0057a/investigative-reversing-0-mystery' download>binary</a> and an <a href='https://challenge-files.cylabacademy.net/library/c99dbff9da4f2317c128f3314ca15e30defdfbd0755d10a7ee3148bcafa0057a/investigative-reversing-0-mystery.png' download>image</a>. See what you can make of it. There should be a flag somewhere.
+We have recovered a <a href='https://challenge-files.cylabacademy.net/library/0d26b1955f5ba3e07dd3f6129588bc0c1efaef3d1f042632e3d2c5ad1ae76ff4/investigative-reversing-0-mystery' download>binary</a> and an <a href='https://challenge-files.cylabacademy.net/library/0d26b1955f5ba3e07dd3f6129588bc0c1efaef3d1f042632e3d2c5ad1ae76ff4/investigative-reversing-0-mystery.png' download>image</a>. See what you can make of it. There should be a flag somewhere.
 
 ### Hints
 - Try using some forensics skills on the image
@@ -22,7 +22,7 @@ We have recovered a <a href='https://challenge-files.cylabacademy.net/library/c9
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 
@@ -89,5 +89,5 @@ if __name__ == "__main__":
 ## Log thực thi & Flag (Output & Verification)
 ```text
 [+] Flag verified and saved to flag.txt:
-academy{f0und_1t_83c404e9}
+academy{f0und_1t_c061a535}
 ```

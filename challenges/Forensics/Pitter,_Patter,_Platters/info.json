@@ -5,9 +5,9 @@
   "difficulty": 2,
   "points": 250,
   "on_demand": false,
-  "connection_cmd": "https://challenge-files.cylabacademy.net/library/aa2c48f05edb24ca322b4f28952e172d0b0540d7a55d14ebbbba84415951ec6e/suspicious.dd.sda1",
-  "target_host": "challenge-files.cylabacademy.net",
-  "target_port": 443,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
   "downloaded_files": [
     "suspicious.dd.sda1"
   ],

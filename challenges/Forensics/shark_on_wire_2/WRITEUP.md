@@ -4,7 +4,7 @@
 - **Challenge:** shark on wire 2 (ID: 84)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/f76620763560ca0683be36e0ed4648743f969ab4d852fda0d8fb4d3ae21a173d/shark-on-wire-2-capture.pcap`
+- **Server / Instance:** `N/A`
 - **Attached Files:** shark-on-wire-2-capture.pcap
 - **Official Flag:** `academy{p1LLf3r3d_data_v1a_st3g0}`
 
@@ -20,7 +20,7 @@ None
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via existing writeup.
 
 ---
 

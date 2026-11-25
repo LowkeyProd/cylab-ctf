@@ -1,0 +1,14 @@
+[2026-10-28 22:51:08] [INFO] [#144 Mod 26] [SETUP] Setting up challenge #144 (Mod 26) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Mod_26
+[2026-10-28 22:51:08] [INFO] [#144 Mod 26] [DOWNLOAD] Downloaded values.txt (55 bytes)
+[2026-10-28 22:51:08] [INFO] [#144 Mod 26] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Mod_26
+[2026-10-28 22:51:08] [INFO] [#144 Mod 26] [FLOW_START] Starting end-to-end solve flow for challenge #144 (Mod 26)
+[2026-10-28 22:51:08] [INFO] [#144 Mod 26] [HEURISTICS_START] Running automated fast solver heuristics for #144 (Mod 26)...
+[2026-10-28 22:51:08] [SUCCESS] [#144 Mod 26] [STAGE_1_SUCCESS] Solved in Stage 1 (Fast Heuristics): academy{nadrHpcz}
+[2026-10-28 22:51:09] [INFO] [#144 Mod 26] [AI_SOLVE_START] Activating Antigravity AI Solver for #144 (Mod 26) [timeout=300s]...
+[2026-10-29 18:48:41] [INFO] [#144 Mod 26] [SETUP] Setting up challenge #144 (Mod 26) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Mod_26
+[2026-10-29 18:48:41] [INFO] [#144 Mod 26] [DOWNLOAD] Downloaded values.txt (55 bytes)
+[2026-10-29 18:48:41] [INFO] [#144 Mod 26] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\Mod_26
+[2026-10-29 18:48:41] [INFO] [#144 Mod 26] [FLOW_START] Starting improved end-to-end solve flow for challenge #144 (Mod 26)
+[2026-10-29 18:48:43] [INFO] [#144 Mod 26] [STAGE_WRITEUP_START] Prioritizing writeup solving for #144
+[2026-10-29 18:48:43] [SUCCESS] [#144 Mod 26] [FLAG_SUBMISSION_SUCCESS] Accepted flag variant: academy{next_time_I'll_try_2_rounds_of_rot13_5c5f5b36}
+[2026-10-29 18:48:43] [SUCCESS] [#144 Mod 26] [STAGE_WRITEUP_SUCCESS] Solved via writeup static flag: academy{next_time_I'll_try_2_rounds_of_rot13_5c5f5b36}

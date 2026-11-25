@@ -1,0 +1,7 @@
+[2026-10-29 18:48:49] [INFO] [#367 ReadMyCert] [SETUP] Setting up challenge #367 (ReadMyCert) in C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\ReadMyCert
+[2026-10-29 18:48:49] [INFO] [#367 ReadMyCert] [DOWNLOAD] Downloaded readmycert.csr (997 bytes)
+[2026-10-29 18:48:49] [INFO] [#367 ReadMyCert] [READY] Workspace ready at C:\Users\lowkeyprod\cylab-ctf\challenges\Cryptography\ReadMyCert
+[2026-10-29 18:48:49] [INFO] [#367 ReadMyCert] [FLOW_START] Starting improved end-to-end solve flow for challenge #367 (ReadMyCert)
+[2026-10-29 18:48:50] [INFO] [#367 ReadMyCert] [STAGE_WRITEUP_START] Prioritizing writeup solving for #367
+[2026-10-29 18:48:51] [SUCCESS] [#367 ReadMyCert] [FLAG_SUBMISSION_SUCCESS] Accepted flag variant: academy{read_mycert_dcfb9c76}
+[2026-10-29 18:48:51] [SUCCESS] [#367 ReadMyCert] [STAGE_WRITEUP_SUCCESS] Solved via writeup static flag: academy{read_mycert_dcfb9c76}

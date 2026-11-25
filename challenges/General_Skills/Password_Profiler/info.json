@@ -5,9 +5,9 @@
   "difficulty": 1,
   "points": 100,
   "on_demand": false,
-  "connection_cmd": "https://challenge-files.cylabacademy.net/library/eee2a66921bd7ab65c6464f5293a9d15cc01c8631a0dc4c9668db8a2525639fc/userinfo.txt",
-  "target_host": "challenge-files.cylabacademy.net",
-  "target_port": 443,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
   "downloaded_files": [
     "userinfo.txt",
     "hash.txt",

@@ -4,7 +4,7 @@
 - **Challenge:** Investigative Reversing 2 (ID: 13)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/c8f61fa3443c695c183ff25fdeadc7a4efb639f428b5e46b3122f8880e56a782/investigative-reversing-2-mystery`
+- **Server / Instance:** `N/A`
 - **Attached Files:** investigative-reversing-2-mystery, investigative-reversing-2-encoded.bmp
 - **Official Flag:** `academy{n3xt_0n30000000000000000000000000ef4b753e}`
 
@@ -22,7 +22,7 @@ We have recovered a <a href='https://challenge-files.cylabacademy.net/library/c8
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via writeup solve.py.
 
 ---
 

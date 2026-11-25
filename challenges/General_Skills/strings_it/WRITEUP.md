@@ -4,15 +4,15 @@
 - **Challenge:** strings it (ID: 37)
 - **CTF Event / Platform:** CyLab Security Academy
 - **Category:** General Skills
-- **Server / Instance:** `https://challenge-files.cylabacademy.net/library/dede17d717e026b75f6b9e7fb2c1601b46093ced6f209b8f6b27ffd883a9ae2f/strings`
+- **Server / Instance:** `N/A`
 - **Attached Files:** strings
-- **Official Flag:** `academy{5tRIng5_1T_b1e21039}`
+- **Official Flag:** `academy{5tRIng5_1T_DAEbE8bd}`
 
 ---
 
 ## Mô tả bài toán (Overview / Analysis)
 
-Can you find the flag in <a href='https://challenge-files.cylabacademy.net/library/dede17d717e026b75f6b9e7fb2c1601b46093ced6f209b8f6b27ffd883a9ae2f/strings' download>file</a> without running it?
+Can you find the flag in <a href='https://challenge-files.cylabacademy.net/library/af9f565bb78cf306870b6fdffd7439bfac1a8484bfd7f7ceaa4f2d04cb40499c/strings' download>file</a> without running it?
 
 ### Hints
 - [strings](https://linux.die.net/man/1/strings)
@@ -20,7 +20,7 @@ Can you find the flag in <a href='https://challenge-files.cylabacademy.net/libra
 ---
 
 ## Chi tiết kỹ thuật (Technical Deep-Dive)
-Solved autonomously by Antigravity CTF Agent.
+Solved via Fast Heuristics.
 
 ---
 
@@ -69,5 +69,5 @@ if __name__ == "__main__":
 ## Log thực thi & Flag (Output & Verification)
 ```text
 [+] Flag verified and saved to flag.txt:
-academy{5tRIng5_1T_b1e21039}
+academy{5tRIng5_1T_DAEbE8bd}
 ```

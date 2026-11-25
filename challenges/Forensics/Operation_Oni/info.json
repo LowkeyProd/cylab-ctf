@@ -1,0 +1,16 @@
+{
+  "id": 284,
+  "name": "Operation Oni",
+  "category": "Forensics",
+  "difficulty": 2,
+  "points": 300,
+  "on_demand": true,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "disk.img.gz"
+  ],
+  "hints": [],
+  "description": "Download this disk image, find the key and log into the remote machine.\n\nNote: if you are using the webshell, download and extract the disk image into\n`/tmp` not your home directory.\n- <a href='https://challenge-files.cylabacademy.net/library/8af34b0fa863a6efa03d28278ca270b335291ad998f21c3696889bdc9c77ab72/disk.img.gz' download>Download disk image</a>\n- Remote machine: `ssh -i key_file -p 47623 ctf-player@chatelaine.cylabacademy.net`"
+}

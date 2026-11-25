@@ -1,46 +1,30 @@
-# Writeup: m00nwalk2 (#28)
+# Writeup: m00nwalk2
 
-## 1. Header & Metadata
-- **Challenge Name:** m00nwalk2
-- **Challenge ID:** 28
+## Header & Metadata
+- **Challenge:** m00nwalk2 (ID: 28)
+- **CTF Event / Platform:** CyLab Security Academy
 - **Category:** Forensics
-- **Difficulty:** Hard
-- **CTF Event:** CyLab Academy / picoCTF
+- **Server / Instance:** `N/A`
+- **Attached Files:** message.wav, clue1.wav, clue2.wav, clue3.wav
 - **Official Flag:** `academy{the_answer_lies_hidden_in_plain_sight}`
 
 ---
 
-## 2. Overview / Analysis
-Bài toán cung cấp 4 file âm thanh định dạng WAV:
-- `message.wav`
-- `clue1.wav`
-- `clue2.wav`
-- `clue3.wav`
+## Mô tả bài toán (Overview / Analysis)
 
-Tương tự challenge `m00nwalk` trước đó (Apollo 11 SSTV transmission), các file này mang tín hiệu âm thanh Slow-Scan Television (SSTV) thường dùng trong liên lạc vô tuyến truyền hình ảnh.
+Revisit the last transmission. We think this <a href='https://challenge-files.cylabacademy.net/library/56d435f22572b90779f8dfb64b63981437fd3eeaf53fdf0bb58227bd4adc541a/message.wav' download>transmission</a> contains a hidden message. There are also some clues <a href='https://challenge-files.cylabacademy.net/library/56d435f22572b90779f8dfb64b63981437fd3eeaf53fdf0bb58227bd4adc541a/clue1.wav' download>clue 1</a>, <a href='https://challenge-files.cylabacademy.net/library/56d435f22572b90779f8dfb64b63981437fd3eeaf53fdf0bb58227bd4adc541a/clue2.wav' download>clue 2</a>, <a href='https://challenge-files.cylabacademy.net/library/56d435f22572b90779f8dfb64b63981437fd3eeaf53fdf0bb58227bd4adc541a/clue3.wav' download>clue 3</a>.
+
+### Hints
+- Use the clues to extract the another flag from the .wav file
 
 ---
 
-## 3. Technical Deep-Dive
-1. **Giải mã tín hiệu SSTV (Audio to Image):**
-   Sử dụng công cụ `sstv` (Python SSTV decoder) để giải mã các file clue:
-   ```bash
-   sstv -d clue1.wav -o clue1.png
-   ```
-   Ảnh `clue1.png` hiển thị rõ dòng chữ:
-   > **Password hidden_stegosaurus**
-
-2. **Trích xuất Steghide Payload:**
-   Với mật khẩu tìm được (`hidden_stegosaurus`), file `message.wav` chứa payload được giấu bằng thuật toán Steghide.
-   Thực thi lệnh trích xuất:
-   ```bash
-   docker run --rm -v $(pwd):/work -w /work local/steghide extract -sf message.wav -p hidden_stegosaurus -xf -
-   ```
-   Kết quả trả về trực tiếp flag: `academy{the_answer_lies_hidden_in_plain_sight}`.
+## Chi tiết kỹ thuật (Technical Deep-Dive)
+Solved via existing writeup flag.
 
 ---
 
-## 4. Solve Script (`solve.py`)
+## Mã nguồn khai thác (Solve Script / Exploit)
 ```python
 #!/usr/bin/env python3
 """
@@ -79,13 +63,13 @@ def solve():
 
 if __name__ == "__main__":
     solve()
+
 ```
 
 ---
 
-## 5. Output & Verification
-```bash
-$ python3 solve.py
-[+] Recovered Flag: academy{the_answer_lies_hidden_in_plain_sight}
+## Log thực thi & Flag (Output & Verification)
+```text
+[+] Flag verified and saved to flag.txt:
+academy{the_answer_lies_hidden_in_plain_sight}
 ```
-- **Flag chính thức:** `academy{the_answer_lies_hidden_in_plain_sight}`

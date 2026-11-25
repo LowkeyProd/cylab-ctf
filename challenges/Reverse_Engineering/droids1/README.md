@@ -4,7 +4,7 @@
 - **Difficulty:** Hard
 - **Points:** 350
 - **Instance Required:** No
-- **Connection:** `https://challenge-files.cylabacademy.net/library/9660a88d9399f1bdcd2a86ab0cef32c7be0e82a0bbf002f68623ef7c7495f062/one.apk`
+- **Connection:** `N/A`
 
 ## Description
 

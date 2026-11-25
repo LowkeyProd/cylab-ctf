@@ -5,9 +5,9 @@
   "difficulty": 3,
   "points": 350,
   "on_demand": false,
-  "connection_cmd": "https://challenge-files.cylabacademy.net/library/9660a88d9399f1bdcd2a86ab0cef32c7be0e82a0bbf002f68623ef7c7495f062/one.apk",
-  "target_host": "challenge-files.cylabacademy.net",
-  "target_port": 443,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
   "downloaded_files": [
     "one.apk"
   ],

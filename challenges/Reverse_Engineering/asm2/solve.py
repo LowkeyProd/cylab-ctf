@@ -1,113 +1,96 @@
 #!/usr/bin/env python3
 """
-Solver for asm2 (Reverse Engineering)
-Simulates the execution of the assembly function asm2 from test.S.
+Clean, self-contained solver for asm2 (#16).
+Simulates x86 assembly function asm2(0xd, 0x26) from test.S.
 """
 
 import os
 import re
-import json
+import sys
 from pathlib import Path
 
+def parse_connection_cfg(cfg_path: Path):
+    config = {}
+    if cfg_path.exists():
+        with open(cfg_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if "=" in line and not line.startswith("#"):
+                    k, v = line.split("=", 1)
+                    config[k.strip()] = v.strip()
+    return config
 
-def parse_asm2_from_file(filepath: Path):
+def parse_assembly(asm_path: Path):
     """
-    Parses test.S to extract constants used in asm2.
+    Parses test.S to extract the increment and limit values.
     """
-    if not filepath.exists():
-        # Fallback constants if test.S is missing
-        return 0x1, 0xE7, 0x5ED6
+    inc_v4 = 0x1
+    inc_v8 = 0xbe
+    cmp_v8 = 0x1c9c
 
-    content = filepath.read_text(encoding="utf-8")
-
-    inc_v4_match = re.search(
-        r"add\s+DWORD PTR \[ebp-0x4\],\s*(0x[0-9a-fA-F]+|\d+)", content
-    )
-    inc_v8_match = re.search(
-        r"add\s+DWORD PTR \[ebp-0x8\],\s*(0x[0-9a-fA-F]+|\d+)", content
-    )
-    cmp_v8_match = re.search(
-        r"cmp\s+DWORD PTR \[ebp-0x8\],\s*(0x[0-9a-fA-F]+|\d+)", content
-    )
-
-    inc_v4 = int(inc_v4_match.group(1), 0) if inc_v4_match else 0x1
-    inc_v8 = int(inc_v8_match.group(1), 0) if inc_v8_match else 0xE7
-    cmp_v8 = int(cmp_v8_match.group(1), 0) if cmp_v8_match else 0x5ED6
+    if asm_path.exists():
+        content = asm_path.read_text(encoding="utf-8")
+        m_inc4 = re.search(r"add\s+DWORD PTR \[ebp-0x4\],\s*(0x[0-9a-fA-F]+|\d+)", content)
+        m_inc8 = re.search(r"add\s+DWORD PTR \[ebp-0x8\],\s*(0x[0-9a-fA-F]+|\d+)", content)
+        m_cmp8 = re.search(r"cmp\s+DWORD PTR \[ebp-0x8\],\s*(0x[0-9a-fA-F]+|\d+)", content)
+        if m_inc4:
+            inc_v4 = int(m_inc4.group(1), 0)
+        if m_inc8:
+            inc_v8 = int(m_inc8.group(1), 0)
+        if m_cmp8:
+            cmp_v8 = int(m_cmp8.group(1), 0)
 
     return inc_v4, inc_v8, cmp_v8
 
-
-def get_call_args(base_dir: Path):
-    """
-    Extracts function arguments asm2(arg1, arg2) from info.json or README.md.
-    Defaults to (0xb, 0x1a).
-    """
-    info_path = base_dir / "info.json"
-    if info_path.exists():
-        try:
-            with open(info_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                desc = data.get("description", "")
-                m = re.search(r"asm2\s*\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*\)", desc)
-                if m:
-                    return int(m.group(1), 0), int(m.group(2), 0)
-        except Exception:
-            pass
-    return 0xB, 0x1A
-
-
-def simulate_asm2(arg1: int, arg2: int, inc_v4: int = 0x1, inc_v8: int = 0xE7, cmp_v8: int = 0x5ED6) -> int:
+def simulate_asm2(arg1: int, arg2: int, inc_v4: int, inc_v8: int, cmp_v8: int) -> int:
     """
     Simulates the assembly logic:
-        <+0>: push ebp
-        <+1>: mov ebp, esp
-        <+3>: sub esp, 0x10
-        <+6>: mov eax, DWORD PTR [ebp+0xc]   ; eax = arg2
-        <+9>: mov DWORD PTR [ebp-0x4], eax   ; var_4 = arg2
-        <+12>: mov eax, DWORD PTR [ebp+0x8]  ; eax = arg1
-        <+15>: mov DWORD PTR [ebp-0x8], eax  ; var_8 = arg1
-        <+18>: jmp <asm2+31>
-        <+20>: add DWORD PTR [ebp-0x4], inc_v4
-        <+24>: add DWORD PTR [ebp-0x8], inc_v8
-        <+31>: cmp DWORD PTR [ebp-0x8], cmp_v8
-        <+38>: jle <asm2+20>
-        <+40>: mov eax, DWORD PTR [ebp-0x4]
-        <+43>: leave
-        <+44>: ret
+        ebp + 0x8  = arg1
+        ebp + 0xc  = arg2
+        ebp - 0x4  = var_4 (init to arg2)
+        ebp - 0x8  = var_8 (init to arg1)
+        while var_8 <= cmp_v8:
+            var_4 += inc_v4
+            var_8 += inc_v8
+        return var_4
     """
     var_4 = arg2 & 0xFFFFFFFF
     var_8 = arg1 & 0xFFFFFFFF
 
-    # Jump to cmp first
+    print(f"[*] Initial state: var_4={hex(var_4)}, var_8={hex(var_8)}", flush=True)
+    print(f"[*] Loop condition: var_8 <= {hex(cmp_v8)}, inc_v4={hex(inc_v4)}, inc_v8={hex(inc_v8)}", flush=True)
+
+    iterations = 0
     while var_8 <= cmp_v8:
         var_4 = (var_4 + inc_v4) & 0xFFFFFFFF
         var_8 = (var_8 + inc_v8) & 0xFFFFFFFF
+        iterations += 1
 
+    print(f"[*] Loop terminated after {iterations} iterations", flush=True)
+    print(f"[*] Final state: var_4={hex(var_4)}, var_8={hex(var_8)}", flush=True)
     return var_4
 
+def main():
+    base_dir = Path(__file__).parent.resolve()
+    cfg_file = base_dir / "connection.cfg"
+    net_config = parse_connection_cfg(cfg_file)
 
-def solve():
-    script_dir = Path(__file__).parent.resolve()
-    test_asm_file = script_dir / "test.S"
+    asm_file = base_dir / "test.S"
+    inc_v4, inc_v8, cmp_v8 = parse_assembly(asm_file)
 
-    # 1. Read input data
-    inc_v4, inc_v8, cmp_v8 = parse_asm2_from_file(test_asm_file)
-    arg1, arg2 = get_call_args(script_dir)
+    # Arguments according to problem statement: asm2(0xd, 0x26)
+    arg1 = 0xd
+    arg2 = 0x26
 
-    # 2. Perform transformations / emulation
+    print(f"[*] Simulating asm2({hex(arg1)}, {hex(arg2)})...", flush=True)
     result = simulate_asm2(arg1, arg2, inc_v4, inc_v8, cmp_v8)
     token = hex(result)
 
-    # 3. Print decoded token
-    print(token)
+    print(f"[+] Flag Token: {token}", flush=True)
 
-    # 4. Save flag.txt
-    flag_file = script_dir / "flag.txt"
-    with open(flag_file, "w", encoding="utf-8") as f:
-        f.write(token.strip())
-
-    return token
-
+    flag_path = base_dir / "flag.txt"
+    flag_path.write_text(token.strip(), encoding="utf-8")
+    print(f"[+] Saved flag to {flag_path}", flush=True)
 
 if __name__ == "__main__":
-    solve()
+    main()

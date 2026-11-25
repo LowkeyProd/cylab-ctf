@@ -1,0 +1,19 @@
+{
+  "id": 417,
+  "name": "flag_printer",
+  "category": "Cryptography",
+  "difficulty": 3,
+  "points": 500,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "flag_printer.py",
+    "encoded.txt"
+  ],
+  "hints": [
+    "`ax^2 + bx + c`"
+  ],
+  "description": "I made a program to solve a problem, but it seems too slow :(\n\nDownload the program <a href='https://challenge-files.cylabacademy.net/library/97e9e5e3ae193cc9ab6e1be52bd5323a2907e17f8ad0059bcf91aa5c690a1525/flag_printer.py' download>here</a>.\n\nDownload the message <a href='https://challenge-files.cylabacademy.net/library/97e9e5e3ae193cc9ab6e1be52bd5323a2907e17f8ad0059bcf91aa5c690a1525/encoded.txt' download>here</a>.\n"
+}

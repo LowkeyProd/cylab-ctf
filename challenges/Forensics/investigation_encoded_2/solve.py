@@ -94,7 +94,7 @@ def solve():
     with open(flag_file, "w") as f:
         f.write(flag_raw + "\n")
 
-    print(f"Flag: {flag_raw}")
+    print(flag_raw, flush=True)
     return flag_raw
 
 if __name__ == "__main__":

@@ -1,0 +1,20 @@
+{
+  "id": 701,
+  "name": "Black Cobra Pepper",
+  "category": "Cryptography",
+  "difficulty": 2,
+  "points": 200,
+  "on_demand": false,
+  "connection_cmd": "",
+  "target_host": "",
+  "target_port": 0,
+  "downloaded_files": [
+    "chall.py",
+    "output.txt"
+  ],
+  "hints": [
+    "Does this remind you of any other popular encryption?",
+    "What purpose does the s-box serve?"
+  ],
+  "description": "i like peppers. (change!)\n<a href='https://challenge-files.cylabacademy.net/library/91e27d051904682244445ade0731de93da2d986ad610b747c9874bd821c2f89e/chall.py' download>chall.py</a>\n<a href='https://challenge-files.cylabacademy.net/library/91e27d051904682244445ade0731de93da2d986ad610b747c9874bd821c2f89e/output.txt' download>output.txt</a>\n"
+}
