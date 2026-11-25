@@ -18,35 +18,39 @@ A command-line interface (CLI) tool designed for interacting with the CyLab Acad
   - rich
 
 Install dependencies:
-`ash
+
+```bash
 pip install curl_cffi rich
-`
+```
 
 ## Setup & Usage
 
 1. Clone the repository:
-`ash
+
+```bash
 git clone https://github.com/LowkeyProd/cylab-ctf.git
 cd cylab-ctf
-`
+```
 
 2. Configure session:
-Copy .cylab_session.example.json to .cylab_session.json and insert your session credentials:
-`ash
+Copy `.cylab_session.example.json` to `.cylab_session.json` and insert your session credentials:
+
+```bash
 cp .cylab_session.example.json .cylab_session.json
-`
+```
 
 3. Run the tool:
-`ash
+
+```bash
 python cylab_tool.py
-`
+```
 
 ## CLI Options
 
-- --help: Display available command-line options and parameters.
-- --lang {vi,en}: Select terminal interface language (Vietnamese or English).
-- --category <name>: Filter challenges by category.
-- --writeups-only: Filter for challenges with local writeups.
+- `--help`: Display available command-line options and parameters.
+- `--lang {vi,en}`: Select terminal interface language (Vietnamese or English).
+- `--category <name>`: Filter challenges by category.
+- `--writeups-only`: Filter for challenges with local writeups.
 
 ## Disclaimer
 
